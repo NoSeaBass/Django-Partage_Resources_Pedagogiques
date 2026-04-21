@@ -29,9 +29,9 @@ Dans `monprojet/settings.py`, modifiez :
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'partage_pedago',  # votre base MySQL
-        'USER': 'root',           # votre user
-        'PASSWORD': 'votre_pass',
+        'NAME': 'uni_share_db',
+        'USER': 'root', # votre user
+        'PASSWORD': '', # votre mot de passe
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {'charset': 'utf8mb4'},
