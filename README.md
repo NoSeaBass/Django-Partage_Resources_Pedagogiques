@@ -24,20 +24,12 @@ pip install -r requirements.txt
 ```
 
 ## Configuration base de données
-Dans `monprojet/settings.py`, modifiez :
+Dans `monprojet/settings.py`, pour les paramètres de `DATABASES` modifiez :
 ```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'uni_share_db',
-        'USER': 'root', # votre user
-        'PASSWORD': '', # votre mot de passe
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {'charset': 'utf8mb4'},
-    }
-}
+'USER': 'postgres', # votre user
+'PASSWORD': '', # votre mot de passe
 ```
+
 
 ## Lancement du projet
 ```bash

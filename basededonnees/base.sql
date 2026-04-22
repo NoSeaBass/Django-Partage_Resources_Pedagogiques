@@ -1,2 +1,1 @@
-CREATE DATABASE IF NOT EXISTS uni_share_db;
-
+CREATE DATABASE uni_share_db;
