@@ -1,50 +1,48 @@
-INSERT INTO Personne (nom, prenom, telephone) VALUES
-('Diop', 'Ibrahima', '+221771234567'),
-('Ndiaye', 'Awa', '+221789876543'),
-('Sane', 'Moussa', '+221701112233'),
-('Cisse', 'Fatou', '+221765554433'),
-('Fall', 'Amadou', '+221774443322');
+-- Connexion à la base de données Django
+\c uni_share;
 
-INSERT INTO Utilisateur (id_utilisateur, email, mot_de_passe, actif) VALUES
-(1, 'admin@unishare.sn', 'pbkdf2_sha256$password_hash_admin', TRUE),
-(2, 'awa.ndiaye@unishare.sn', 'pbkdf2_sha256$password_hash_awa', TRUE),
-(3, 'moussa.sane@unishare.sn', 'pbkdf2_sha256$password_hash_moussa', TRUE),
-(4, 'fatou.cisse@unishare.sn', 'pbkdf2_sha256$password_hash_fatou', TRUE),
-(5, 'amadou.fall@unishare.sn', 'pbkdf2_sha256$password_hash_amadou', TRUE);
+-- Nettoyage des anciennes insertions pour éviter les conflits de clés uniques
+TRUNCATE utilisateurs_utilisateur CASCADE;
+TRUNCATE administrateur_classe CASCADE;
 
-INSERT INTO Administrateur (id_administrateur, niveau_ces) VALUES
+-- 1. Insertion dans l'Utilisateur de base (Données d'authentification + Profil)
+INSERT INTO utilisateurs_utilisateur (id, username, password, is_superuser, is_staff, is_active, date_joined, email, nom, prenom, telephone, first_name, last_name) OVERRIDING SYSTEM VALUE VALUES
+(1, 'admin', 'pbkdf2_sha256$password_hash_admin', TRUE, TRUE, TRUE, CURRENT_TIMESTAMP, 'admin@unishare.sn', 'Diop', 'Ibrahima', '+221771234567', 'Ibrahima', 'Diop'),
+(2, 'awa', 'pbkdf2_sha256$password_hash_awa', FALSE, FALSE, TRUE, CURRENT_TIMESTAMP, 'awa.ndiaye@unishare.sn', 'Ndiaye', 'Awa', '+221789876543', 'Awa', 'Ndiaye'),
+(3, 'moussa', 'pbkdf2_sha256$password_hash_moussa', FALSE, FALSE, TRUE, CURRENT_TIMESTAMP, 'moussa.sane@unishare.sn', 'Sane', 'Moussa', '+221701112233', 'Moussa', 'Sane'),
+(4, 'fatou', 'pbkdf2_sha256$password_hash_fatou', FALSE, FALSE, TRUE, CURRENT_TIMESTAMP, 'fatou.cisse@unishare.sn', 'Cisse', 'Fatou', '+221765554433', 'Fatou', 'Cisse'),
+(5, 'amadou', 'pbkdf2_sha256$password_hash_amadou', FALSE, FALSE, TRUE, CURRENT_TIMESTAMP, 'amadou.fall@unishare.sn', 'Fall', 'Amadou', '+221774443322', 'Amadou', 'Fall');
+
+-- 2. Insertion dans Administrateur (Liaison via utilisateur_id)
+INSERT INTO administrateur_administrateur (utilisateur_id, niveau_ces) VALUES
 (1, 3);
 
-INSERT INTO Enseignant (id_enseignant, grade, specialite) VALUES
+-- 3. Insertion dans Enseignant (Liaison via utilisateur_id vérifiée)
+INSERT INTO utilisateurs_enseignant (utilisateur_id, grade, specialite) VALUES
 (2, 'Professeur Titulaire', 'Génie Logiciel'),
 (3, 'Maître de Conférences', 'Réseaux et Systèmes');
 
-INSERT INTO Classe (nom, effectif, annee) VALUES
-('Licence 3 Informatique', 2, 2026);
+-- 4. Insertion dans Classe
+INSERT INTO administrateur_classe (id, nom, effectif, annee) OVERRIDING SYSTEM VALUE VALUES
+(1, 'Licence 3 Informatique', 2, 2026);
 
-INSERT INTO Etudiant (id_etudiant, NCE, id_classe) VALUES
+-- 5. Insertion dans Etudiant (Liaison via utilisateur_id et "NCE" avec guillemets doubles)
+INSERT INTO utilisateurs_etudiant (utilisateur_id, "NCE", classe_id) VALUES
 (4, 'ETU20260001', 1),
 (5, 'ETU20260002', 1);
 
-INSERT INTO Module (intitule, id_classe) VALUES
-('Développement Web Django', 1),
-('Administration Réseaux', 1);
+-- 6. Insertion dans Module (Liaison via classe_id)
+INSERT INTO administrateur_module (id, intitule, classe_id) OVERRIDING SYSTEM VALUE VALUES
+(1, 'Développement Web Django', 1),
+(2, 'Administration Réseaux', 1);
 
-INSERT INTO Affectation (id_enseignant, id_classe, id_module, est_responsable, date_debut, date_fin) VALUES
-(2, 1, 1, TRUE, '2026-01-05 08:00:00', '2026-06-30 18:00:00'),
-(3, 1, 2, FALSE, '2026-01-05 08:00:00', '2026-06-30 18:00:00');
+-- 7. Insertion dans Affectation (Liaison via enseignant_id, classe_id, module_id)
+INSERT INTO administrateur_affectation (id, est_responsable, date_debut, date_fin, classe_id, enseignant_id, module_id) OVERRIDING SYSTEM VALUE VALUES
+(1, TRUE, '2026-01-05 08:00:00', '2026-06-30 18:00:00', 1, 2, 1),
+(2, FALSE, '2026-01-05 08:00:00', '2026-06-30 18:00:00', 1, 3, 2);
 
-INSERT INTO Ressource (titre, fichier, description, id_module, id_enseignant) VALUES
-('Support de Cours - Modèles Django', 'ressources/cours_models_django.pdf', 'Introduction aux ORM et relations SQL avec Django.', 1, 2),
-('TP 1 - Configuration Réseau', 'ressources/tp1_reseau.pdf', 'Exercices pratiques sur l''adressage IP.', 2, 3);
-
-INSERT INTO Annonce (titre, contenu, id_classe, id_enseignant) VALUES
-('Report du cours de Django', 'Le cours prévu ce mercredi est reporté au vendredi à 14h en salle IP3.', 1, 2);
-
-INSERT INTO Notification (titre, message, lue, id_etudiant) VALUES
-('Nouvelle ressource disponible', 'Le Pr. Awa Ndiaye a ajouté : Support de Cours - Modèles Django.', FALSE, 4),
-('Nouvelle Annonce', 'Un message concernant le report de cours a été publié.', FALSE, 4);
-
-INSERT INTO Historique (action, id_etudiant) VALUES
-('consultation', 5),
-('telechargement', 5);
+-- Synchronisation finale des compteurs d'auto-incrémentation PostgreSQL
+SELECT setval(pg_get_serial_sequence('"utilisateurs_utilisateur"', 'id'), COALESCE(max(id), 1)) FROM utilisateurs_utilisateur;
+SELECT setval(pg_get_serial_sequence('"administrateur_classe"', 'id'), COALESCE(max(id), 1)) FROM administrateur_classe;
+SELECT setval(pg_get_serial_sequence('"administrateur_module"', 'id'), COALESCE(max(id), 1)) FROM administrateur_module;
+SELECT setval(pg_get_serial_sequence('"administrateur_affectation"', 'id'), COALESCE(max(id), 1)) FROM administrateur_affectation;

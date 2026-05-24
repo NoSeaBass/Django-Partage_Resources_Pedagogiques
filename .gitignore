@@ -1,5 +1,10 @@
 !requirement.txt
+Postgresql.session.sql
 .env
+venv/
+env/
+.venv/
+.vscode
 
 __pycache__/
 migrations/
