@@ -5,7 +5,8 @@ Projet web en Python (Django) pour la gestion et le partage de ressources pédag
 ## Prérequis
 
 * Python 3.10+
-* PostgreSQL installé
+* PostgreSQL et son module python (psycopg2-binary)
+* python-dotenv
 * Git
 
 ## Installation
