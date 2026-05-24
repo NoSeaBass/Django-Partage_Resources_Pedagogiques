@@ -1,108 +1,167 @@
--- 1. Création et connexion à la base de données
+-- UniShare — base de données PostgreSQL
+-- Généré pour correspondre exactement aux modèles Django (utilisateurs/models.py)
+-- Ne pas utiliser pour créer la base à la place des migrations Django.
+-- Utiliser uniquement comme documentation ou pour inspection.
+
 CREATE DATABASE uni_share;
 
--- 2. Création des tables
-CREATE TABLE Personne (
-    id_personne INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
-    telephone VARCHAR(20)
+-- Extension recommandée pour PostgreSQL
+-- \c uni_share
+
+-- Table principale des utilisateurs (correspond à Utilisateur extends AbstractUser)
+-- Django crée aussi les colonnes héritées de AbstractUser :
+-- password, last_login, is_superuser, username, first_name, last_name,
+-- is_staff, is_active, date_joined — elles ne sont pas répétées ici
+CREATE TABLE utilisateurs_utilisateur (
+    id           SERIAL PRIMARY KEY,
+    email        VARCHAR(254) UNIQUE NOT NULL,
+    nom          VARCHAR(100) NOT NULL,
+    prenom       VARCHAR(100) NOT NULL,
+    telephone    VARCHAR(20),
+    role         VARCHAR(20) NOT NULL DEFAULT 'ETUDIANT',
+    -- Colonnes AbstractUser (gérées par Django)
+    password     VARCHAR(128) NOT NULL,
+    username     VARCHAR(150) UNIQUE NOT NULL,
+    is_staff     BOOLEAN NOT NULL DEFAULT FALSE,
+    is_superuser BOOLEAN NOT NULL DEFAULT FALSE,
+    is_active    BOOLEAN NOT NULL DEFAULT TRUE,
+    date_joined  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_login   TIMESTAMP,
+    CONSTRAINT check_role CHECK (role IN ('ADMIN', 'ENSEIGNANT', 'RESPONSABLE', 'ETUDIANT'))
 );
 
-CREATE TABLE Utilisateur (
-    id_utilisateur INT PRIMARY KEY,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    mot_de_passe VARCHAR(255) NOT NULL,
-    actif BOOLEAN DEFAULT TRUE,
-    CONSTRAINT fk_utilisateur_personne FOREIGN KEY (id_utilisateur) REFERENCES Personne(id_personne) ON DELETE CASCADE
+CREATE TABLE utilisateurs_administrateur (
+    utilisateur_id INT PRIMARY KEY,
+    CONSTRAINT fk_admin_utilisateur
+        FOREIGN KEY (utilisateur_id)
+        REFERENCES utilisateurs_utilisateur(id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Administrateur (
-    id_administrateur INT PRIMARY KEY,
-    niveau_ces INT NOT NULL,
-    CONSTRAINT fk_admin_utilisateur FOREIGN KEY (id_administrateur) REFERENCES Utilisateur(id_utilisateur) ON DELETE CASCADE
+CREATE TABLE utilisateurs_enseignant (
+    utilisateur_id INT PRIMARY KEY,
+    grade          VARCHAR(50),
+    specialite     VARCHAR(100),
+    CONSTRAINT fk_enseignant_utilisateur
+        FOREIGN KEY (utilisateur_id)
+        REFERENCES utilisateurs_utilisateur(id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Enseignant (
-    id_enseignant INT PRIMARY KEY,
-    grade VARCHAR(50),
-    specialite VARCHAR(100),
-    CONSTRAINT fk_enseignant_utilisateur FOREIGN KEY (id_enseignant) REFERENCES Utilisateur(id_utilisateur) ON DELETE CASCADE
+CREATE TABLE utilisateurs_classe (
+    id       SERIAL PRIMARY KEY,
+    nom      VARCHAR(50) NOT NULL,
+    effectif INT NOT NULL DEFAULT 0,
+    annee    INT NOT NULL
 );
 
-CREATE TABLE Classe (
-    id_classe INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nom VARCHAR(50) NOT NULL,
-    effectif INT DEFAULT 0,
-    annee INT NOT NULL
+CREATE TABLE utilisateurs_etudiant (
+    utilisateur_id INT PRIMARY KEY,
+    NCE            VARCHAR(50) UNIQUE NOT NULL,
+    classe_id      INT,
+    CONSTRAINT fk_etudiant_utilisateur
+        FOREIGN KEY (utilisateur_id)
+        REFERENCES utilisateurs_utilisateur(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_etudiant_classe
+        FOREIGN KEY (classe_id)
+        REFERENCES utilisateurs_classe(id)
+        ON DELETE SET NULL
 );
 
-CREATE TABLE Etudiant (
-    id_etudiant INT PRIMARY KEY,
-    NCE VARCHAR(50) UNIQUE NOT NULL,
-    id_classe INT,
-    CONSTRAINT fk_etudiant_utilisateur FOREIGN KEY (id_etudiant) REFERENCES Utilisateur(id_utilisateur) ON DELETE CASCADE,
-    CONSTRAINT fk_etudiant_classe FOREIGN KEY (id_classe) REFERENCES Classe(id_classe) ON DELETE SET NULL
+CREATE TABLE utilisateurs_module (
+    id        SERIAL PRIMARY KEY,
+    intitule  VARCHAR(150) NOT NULL,
+    classe_id INT NOT NULL,
+    CONSTRAINT fk_module_classe
+        FOREIGN KEY (classe_id)
+        REFERENCES utilisateurs_classe(id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Module (
-    id_module INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    intitule VARCHAR(150) NOT NULL,
-    id_classe INT NOT NULL,
-    CONSTRAINT fk_module_classe FOREIGN KEY (id_classe) REFERENCES Classe(id_classe) ON DELETE CASCADE
+CREATE TABLE utilisateurs_affectation (
+    id              SERIAL PRIMARY KEY,
+    enseignant_id   INT NOT NULL,
+    classe_id       INT NOT NULL,
+    module_id       INT NOT NULL,
+    est_responsable BOOLEAN NOT NULL DEFAULT FALSE,
+    date_debut      TIMESTAMP NOT NULL,
+    date_fin        TIMESTAMP NOT NULL,
+    CONSTRAINT fk_affectation_enseignant
+        FOREIGN KEY (enseignant_id)
+        REFERENCES utilisateurs_enseignant(utilisateur_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_affectation_classe
+        FOREIGN KEY (classe_id)
+        REFERENCES utilisateurs_classe(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_affectation_module
+        FOREIGN KEY (module_id)
+        REFERENCES utilisateurs_module(id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Affectation (
-    id_affectation INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_enseignant INT NOT NULL,
-    id_classe INT NOT NULL,
-    id_module INT NOT NULL,
-    est_responsable BOOLEAN DEFAULT FALSE,
-    date_debut TIMESTAMP NOT NULL,
-    date_fin TIMESTAMP NOT NULL,
-    CONSTRAINT fk_affectation_enseignant FOREIGN KEY (id_enseignant) REFERENCES Enseignant(id_enseignant) ON DELETE CASCADE,
-    CONSTRAINT fk_affectation_classe FOREIGN KEY (id_classe) REFERENCES Classe(id_classe) ON DELETE CASCADE,
-    CONSTRAINT fk_affectation_module FOREIGN KEY (id_module) REFERENCES Module(id_module) ON DELETE CASCADE
+CREATE TABLE utilisateurs_ressource (
+    id            SERIAL PRIMARY KEY,
+    titre         VARCHAR(150) NOT NULL,
+    fichier       VARCHAR(100) NOT NULL,
+    description   TEXT,
+    date_ajout    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    module_id     INT NOT NULL,
+    enseignant_id INT NOT NULL,
+    CONSTRAINT fk_ressource_module
+        FOREIGN KEY (module_id)
+        REFERENCES utilisateurs_module(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_ressource_enseignant
+        FOREIGN KEY (enseignant_id)
+        REFERENCES utilisateurs_enseignant(utilisateur_id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Ressource (
-    id_ressource INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    titre VARCHAR(150) NOT NULL,
-    fichier VARCHAR(255) NOT NULL,
-    description TEXT,
-    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_module INT NOT NULL,
-    id_enseignant INT NOT NULL,
-    CONSTRAINT fk_ressource_module FOREIGN KEY (id_module) REFERENCES Module(id_module) ON DELETE CASCADE,
-    CONSTRAINT fk_ressource_enseignant FOREIGN KEY (id_enseignant) REFERENCES Enseignant(id_enseignant) ON DELETE CASCADE
+CREATE TABLE utilisateurs_annonce (
+    id            SERIAL PRIMARY KEY,
+    titre         VARCHAR(150) NOT NULL,
+    contenu       TEXT NOT NULL,
+    date_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    classe_id     INT NOT NULL,
+    enseignant_id INT NOT NULL,
+    CONSTRAINT fk_annonce_classe
+        FOREIGN KEY (classe_id)
+        REFERENCES utilisateurs_classe(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_annonce_enseignant
+        FOREIGN KEY (enseignant_id)
+        REFERENCES utilisateurs_enseignant(utilisateur_id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Annonce (
-    id_annonce INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    titre VARCHAR(150) NOT NULL,
-    contenu TEXT NOT NULL,
-    date_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_classe INT NOT NULL,
-    id_enseignant INT NOT NULL,
-    CONSTRAINT fk_annonce_classe FOREIGN KEY (id_classe) REFERENCES Classe(id_classe) ON DELETE CASCADE,
-    CONSTRAINT fk_annonce_enseignant FOREIGN KEY (id_enseignant) REFERENCES Enseignant(id_enseignant) ON DELETE CASCADE
+CREATE TABLE utilisateurs_notification (
+    id            SERIAL PRIMARY KEY,
+    titre         VARCHAR(150) NOT NULL,
+    message       TEXT NOT NULL,
+    lue           BOOLEAN NOT NULL DEFAULT FALSE,
+    date_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    etudiant_id   INT NOT NULL,
+    CONSTRAINT fk_notification_etudiant
+        FOREIGN KEY (etudiant_id)
+        REFERENCES utilisateurs_etudiant(utilisateur_id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE Notification (
-    id_notification INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    titre VARCHAR(150) NOT NULL,
-    message TEXT NOT NULL,
-    lue BOOLEAN DEFAULT FALSE,
-    date_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_etudiant INT NOT NULL,
-    CONSTRAINT fk_notification_etudiant FOREIGN KEY (id_etudiant) REFERENCES Etudiant(id_etudiant) ON DELETE CASCADE
+CREATE TABLE utilisateurs_historique (
+    id            SERIAL PRIMARY KEY,
+    action        VARCHAR(50) NOT NULL,
+    date_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    etudiant_id   INT NOT NULL,
+    ressource_id  INT NOT NULL,
+    CONSTRAINT check_action CHECK (action IN ('telechargement', 'consultation')),
+    CONSTRAINT fk_historique_etudiant
+        FOREIGN KEY (etudiant_id)
+        REFERENCES utilisateurs_etudiant(utilisateur_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_historique_ressource
+        FOREIGN KEY (ressource_id)
+        REFERENCES utilisateurs_ressource(id)
+        ON DELETE CASCADE
 );
-
-CREATE TABLE Historique (
-    id_historique INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    action VARCHAR(50) NOT NULL,
-    date_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_etudiant INT NOT NULL,
-    CONSTRAINT fk_historique_etudiant FOREIGN KEY (id_etudiant) REFERENCES Etudiant(id_etudiant) ON DELETE CASCADE
-);
-

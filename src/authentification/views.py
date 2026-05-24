@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
+from .forms import ConnexionForm
 
 def page_accueil(request):
     return render(request, 'shared/acceuil.html')
@@ -9,15 +10,13 @@ def page_contact(request):
 
 def connexion_public(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = ConnexionForm(request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            # Redirection vers la vue commune, peu importe le rôle
+            login(request, form.user)
             return redirect('utilisateurs:dashboard')
         else:
-            messages.error(request, "Identifiants invalides.")
+            messages.error(request, "Veuillez vérifier vos identifiants.")
     else:
-        form = AuthenticationForm()
+        form = ConnexionForm()
 
     return render(request, 'authentification/authentification.html', {'form': form})
