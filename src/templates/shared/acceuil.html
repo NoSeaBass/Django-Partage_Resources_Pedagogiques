@@ -1,0 +1,23 @@
+{% extends 'shared/layout_public.html' %}
+
+{% block title %}Accueil - UniShare{% endblock %}
+
+{% block main_content %}
+<section class="hero">
+    <h1>Bienvenue dans UniShare</h1>
+    <p>Un site de partage de ressources pour les établissements d'éducation</p>
+    <p>Vous êtes un(e) nouvel(le) étudiant(e) ? <a href="{% url 'utilisateurs:inscription_etudiant' %}" class="btn">inscrivez-vous</a> sinon <a href="{% url 'authentification:connexion' %}">connectez-vous</a></p>
+</section>
+
+<h2>À quoi sert UniShare ?</h2>
+<div class="grid">
+    <div class="card">
+        <h3>Partage de ressources</h3>
+        <p>Selon votre classe et le module, vous verrez des ressources et des annonces publiées par vos professeurs</p>
+    </div>
+    <div class="card">
+        <h3>Contact avec les professeurs</h3>
+        <p>La liste de vos collègues et des professeurs est disponible une fois connecté, avec leurs adresses mail pour communiquer directement avec eux</p>
+    </div>
+</div>
+{% endblock %}

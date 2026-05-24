@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="">
+    <script src=""></script>
+{% endblock %}
+
+{% block content %}
+<header>
+    <nav>
+        <div class="logo">
+            <a href="{% url 'authentification:accueil' %}" style="font-weight: bold; color: #333; font-size: 1.25rem;">UniShare</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'authentification:accueil' %}">Home</a></li>
+            <li><a href="{% url 'authentification:contact' %}">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    {% block main_content %}{% endblock %}
+</main>
+
+<footer>
+    <p>&copy; 2026 UniShare. All rights reserved. | <a href="{% url 'administrateur:admin_login' %}" style="color: #666; text-decoration: none; font-size: 0.9rem;">Espace Administration</a></p>
+</footer>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Gérer les Classes{% endblock %}
+
+{% block content %}
+
+<p style="font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;">
+  <a href="{% url 'admin_dashboard' %}" style="color:#e94560;text-decoration:none;">
+    <i class="bi bi-house-fill"></i> Dashboard
+  </a> › Classes
+</p>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+  <h1 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;margin:0;">
+    <i class="bi bi-building me-2" style="color:#eab308"></i>Gestion des Classes
+  </h1>
+  <a href="{% url 'admin_classe_ajouter' %}"
+     style="background:#e94560;color:#fff;border-radius:10px;padding:.6rem 1.4rem;
+            font-weight:700;font-size:.9rem;text-decoration:none;">
+    <i class="bi bi-plus-lg me-1"></i> Ajouter une classe
+  </a>
+</div>
+
+<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;">
+  <table style="width:100%;border-collapse:collapse;color:var(--text);">
+    <thead>
+      <tr style="background:rgba(255,255,255,.05);">
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">#</th>
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Nom</th>
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Niveau</th>
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Année</th>
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Étudiants</th>
+        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for classe in classes %}
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+        <td style="padding:.85rem 1.2rem;color:var(--muted);">{{ forloop.counter }}</td>
+        <td style="padding:.85rem 1.2rem;font-weight:600;">
+          <i class="bi bi-building me-2" style="color:#eab308"></i>{{ classe.nom }}
+        </td>
+        <td style="padding:.85rem 1.2rem;">{{ classe.niveau|default:"—" }}</td>
+        <td style="padding:.85rem 1.2rem;">{{ classe.annee|default:"—" }}</td>
+        <td style="padding:.85rem 1.2rem;">
+          <span style="background:rgba(234,179,8,.15);color:#eab308;border-radius:6px;padding:.2rem .6rem;font-size:.82rem;font-weight:700;">
+            {{ classe.etudiants.count }} étudiant(s)
+          </span>
+        </td>
+        <td style="padding:.85rem 1.2rem;display:flex;gap:.5rem;">
+          <a href="{% url 'admin_classe_modifier' classe.pk %}"
+             style="background:rgba(59,130,246,.15);color:#3b82f6;border-radius:6px;padding:.3rem .7rem;font-size:.82rem;text-decoration:none;">
+            <i class="bi bi-pencil-fill"></i> Modifier
+          </a>
+          <a href="{% url 'admin_classe_supprimer' classe.pk %}"
+             style="background:rgba(233,69,96,.15);color:#e94560;border-radius:6px;padding:.3rem .7rem;font-size:.82rem;text-decoration:none;"
+             onclick="return confirm('Supprimer cette classe ?')">
+            <i class="bi bi-trash-fill"></i> Supprimer
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">
+          Aucune classe enregistrée.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

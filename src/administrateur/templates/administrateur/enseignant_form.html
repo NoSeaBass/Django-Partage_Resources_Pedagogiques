@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Enseignant{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .form-card h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .form-label {
+    font-size: .82rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .05em; margin-bottom: .4rem;
+    display: block;
+  }
+  .form-control {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px; color: var(--text);
+    padding: .75rem 1rem; font-size: .95rem;
+    width: 100%; margin-bottom: 1rem;
+    transition: border-color .2s;
+  }
+  .form-control:focus {
+    border-color: #e94560;
+    outline: none;
+    background: rgba(255,255,255,.07);
+    color: var(--text);
+  }
+  .btn-submit {
+    background: #e94560; color: #fff;
+    border: none; border-radius: 10px;
+    padding: .8rem 2rem; font-size: 1rem;
+    font-weight: 700; cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-submit:hover { opacity: .85; }
+  .btn-annuler {
+    background: rgba(255,255,255,.05);
+    color: var(--muted); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px; padding: .8rem 2rem;
+    font-size: 1rem; text-decoration: none;
+    margin-left: 1rem;
+  }
+  .section-label {
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem; font-weight: 700;
+    color: #e94560; text-transform: uppercase;
+    letter-spacing: .08em; margin: 1.5rem 0 .8rem;
+    border-bottom: 1px solid rgba(233,69,96,.2);
+    padding-bottom: .4rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h2><i class="bi bi-person-plus me-2" style="color:#e94560"></i>{{ action }} un enseignant</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <p class="section-label">Informations personnelles</p>
+
+    <div class="row g-3">
+      <div class="col-6">
+        <label class="form-label">Nom</label>
+        <input type="text" name="nom" class="form-control"
+               placeholder="Dupont" required
+               value="{{ form.nom.value|default:'' }}"/>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Prénom</label>
+        <input type="text" name="prenom" class="form-control"
+               placeholder="Jean" required
+               value="{{ form.prenom.value|default:'' }}"/>
+      </div>
+    </div>
+
+    <label class="form-label">Téléphone</label>
+    <input type="text" name="telephone" class="form-control"
+           placeholder="+221 77 000 00 00"
+           value="{{ form.telephone.value|default:'' }}"/>
+
+    <label class="form-label">Adresse</label>
+    <textarea name="adresse" class="form-control" rows="2"
+              placeholder="Adresse complète">{{ form.adresse.value|default:'' }}</textarea>
+
+    <p class="section-label">Compte utilisateur</p>
+
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control"
+           placeholder="enseignant@monapp.com" required
+           value="{{ form.email.value|default:'' }}"/>
+
+    <label class="form-label">Mot de passe</label>
+    <input type="password" name="password" class="form-control"
+           placeholder="••••••••" required/>
+
+    <p class="section-label">Informations académiques</p>
+
+    <label class="form-label">Spécialité</label>
+    <input type="text" name="specialite" class="form-control"
+           placeholder="Mathématiques, Informatique..." required
+           value="{{ form.specialite.value|default:'' }}"/>
+
+    <div style="margin-top:1.5rem;">
+      <button type="submit" class="btn-submit">
+        <i class="bi bi-check-lg me-2"></i>{{ action }}
+      </button>
+      <a href="{% url 'admin_enseignants' %}" class="btn-annuler">Annuler</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

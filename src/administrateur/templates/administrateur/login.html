@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+
+{% block title %}Connexion Administrateur - UniShare{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Connexion Administrateur</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Se connecter
+        </button>
+    </form>
+
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

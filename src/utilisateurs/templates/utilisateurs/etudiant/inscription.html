@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block title %}Inscription Étudiant - UniShare{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Inscription Étudiant</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {{ personne_form.as_p }}
+        {{ user_form.as_p }}
+        {{ etudiant_form.as_p }}
+
+        <button type="submit">
+            Créer mon compte
+        </button>
+    </form>
+
+    <div>
+        <p>Déjà inscrit ? <a href="{% url 'authentification:connexion' %}">Connectez-vous ici</a></p>
+    </div>
+</div>
+{% endblock %}

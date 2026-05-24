@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block title %}Connexion - UniShare{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Connexion</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Se connecter
+        </button>
+    </form>
+
+    <div>
+        <p>Pas encore inscrit ? <a href="{% url 'utilisateurs:inscription_etudiant' %}">Inscrivez-vous ici</a></p>
+    </div>
+</div>
+{% endblock %}
