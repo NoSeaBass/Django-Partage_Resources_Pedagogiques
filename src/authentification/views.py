@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import ConnexionForm
 
@@ -13,7 +13,7 @@ def connexion_public(request):
         form = ConnexionForm(request.POST)
         if form.is_valid():
             login(request, form.user)
-            return redirect('utilisateurs:dashboard')
+            return redirect('utilisateurs:home')
         else:
             messages.error(request, "Veuillez vérifier vos identifiants.")
     else:
