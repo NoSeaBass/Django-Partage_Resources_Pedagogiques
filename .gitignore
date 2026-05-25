@@ -6,19 +6,18 @@ env/
 .venv/
 .vscode
 plan.png
-
 __pycache__/
 migrations/
-
 db.sqlite3
 db.sqlite3-journal
-
 junk
 *.log
 *.kate-swp
 *.bkp
 .DS_Store
 Thumbs.db
+
+mySpace/
 
 # Pour l'instant ignorons les suppléments
 install.*
