@@ -17,7 +17,7 @@ def inscription_etudiant(request):
             etudiant.save()
 
             messages.success(request, "Inscription réussie !")
-            return redirect('utilisateurs/home.html')
+            return redirect('utilisateurs:home')
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:

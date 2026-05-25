@@ -5,6 +5,7 @@ venv/
 env/
 .venv/
 .vscode
+plan.png
 
 __pycache__/
 migrations/
