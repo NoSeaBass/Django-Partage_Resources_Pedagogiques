@@ -4,6 +4,7 @@
 {% block extra_head %}
     <link rel="stylesheet" href="">
     <script src=""></script>
+    {% block app_extra_head %}{% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -13,7 +14,7 @@
             <a href="#" style="font-weight: bold; color: #333; font-size: 1.25rem;">UniShare</a>
         </div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
+            <li><a href="{% url 'utilisateurs:home' %}">Home</a></li>
             <li><a href="#">Modules</a></li>
             <li><a href="#">Notifications</a></li>
             <li><a href="#">Mon Compte</a></li>
