@@ -1,220 +1,285 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .models import Administrateur
 
-# Coucou Diarra, j'ai ajouter ce formulaire provenant du formulaire depuis une sorte d'association
 
-from django.contrib.auth.forms import AuthenticationForm
 
 def admin_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST":
+
         if form.is_valid():
+
             user = form.get_user()
 
+            # Vérifie si l'utilisateur est administrateur
             if Administrateur.objects.filter(utilisateur=user).exists():
+
                 login(request, user)
-                return redirect('administrateur:admin_dashboard')
+
+                return redirect("admin_dashboard")
+
             else:
                 messages.error(request, "Accès réservé aux administrateurs.")
+
         else:
             messages.error(request, "Identifiants invalides.")
-    else:
-        form = AuthenticationForm()
 
-    return render(request, 'administrateur/login.html', {'form': form})
-
-
+    return render(request, "administrateur/login.html", {
+        "form": form
+    })
 
 
-def is_admin(user):
-    return user.is_authenticated and user.is_staff
 
-# ── DASHBOARD ──
-@login_required
-@user_passes_test(is_admin)
+# DASHBOARD
+
+
 def dashboard(request):
+
     from etudiant.models import Utilisateur, Etudiant, Classe
     from enseignant.models import Enseignant
+
     context = {
-        'nb_etudiants'    : Etudiant.objects.count(),
-        'nb_enseignants'  : Enseignant.objects.count(),
-        'nb_classes'      : Classe.objects.count(),
-        'nb_comptes'      : Utilisateur.objects.count(),
-        'derniers_comptes': Utilisateur.objects.order_by('-date_joined')[:5],
+        "nb_etudiants": Etudiant.objects.count(),
+        "nb_enseignants": Enseignant.objects.count(),
+        "nb_classes": Classe.objects.count(),
+        "nb_comptes": Utilisateur.objects.count(),
     }
-    return render(request, 'administrateur/dashboard.html', context)
 
-# ── ENSEIGNANTS ──
-@login_required
-@user_passes_test(is_admin)
+    return render(request, "administrateur/dashboard.html", context)
+
+
+# LISTE DES ENSEIGNANTS
 def enseignants(request):
+
     from enseignant.models import Enseignant
-    return render(request, 'administrateur/enseignants.html', {
-        'enseignants': Enseignant.objects.all()
+
+    enseignants = Enseignant.objects.all()
+
+    return render(request, "administrateur/enseignants.html", {
+        "enseignants": enseignants
     })
 
-@login_required
-@user_passes_test(is_admin)
+
+
+# AJOUTER ENSEIGNANT
+
+
 def enseignant_ajouter(request):
+
     from enseignant.forms import EnseignantForm
+
     form = EnseignantForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Enseignant ajouté.")
-        return redirect('admin_enseignants')
-    return render(request, 'administrateur/enseignant_form.html', {'form': form, 'action': 'Ajouter'})
 
-@login_required
-@user_passes_test(is_admin)
+    if form.is_valid():
+
+        form.save()
+
+        messages.success(request, "Enseignant ajouté")
+
+        return redirect("admin_enseignants")
+
+    return render(request, "administrateur/enseignant_form.html", {
+        "form": form
+    })
+
+
+
+# MODIFIER ENSEIGNANT
+
+
 def enseignant_modifier(request, pk):
+
     from enseignant.models import Enseignant
     from enseignant.forms import EnseignantForm
-    obj = get_object_or_404(Enseignant, pk=pk)
-    form = EnseignantForm(request.POST or None, instance=obj)
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Enseignant modifié.")
-        return redirect('admin_enseignants')
-    return render(request, 'administrateur/enseignant_form.html', {'form': form, 'action': 'Modifier'})
 
-@login_required
-@user_passes_test(is_admin)
+    enseignant = get_object_or_404(Enseignant, pk=pk)
+
+    form = EnseignantForm(request.POST or None, instance=enseignant)
+
+    if form.is_valid():
+
+        form.save()
+
+        messages.success(request, "Enseignant modifié")
+
+        return redirect("admin_enseignants")
+
+    return render(request, "administrateur/enseignant_form.html", {
+        "form": form
+    })
+
+
+
+# SUPPRIMER ENSEIGNANT
+
+
 def enseignant_supprimer(request, pk):
+
     from enseignant.models import Enseignant
-    get_object_or_404(Enseignant, pk=pk).delete()
-    messages.success(request, "Enseignant supprimé.")
-    return redirect('admin_enseignants')
 
-# ── CLASSES ──
-@login_required
-@user_passes_test(is_admin)
+    enseignant = get_object_or_404(Enseignant, pk=pk)
+
+    enseignant.delete()
+
+    messages.success(request, "Enseignant supprimé")
+
+    return redirect("admin_enseignants")
+
+
+
+# CLASSES
+
+
 def classes(request):
+
     from etudiant.models import Classe
-    return render(request, 'administrateur/classes.html', {
-        'classes': Classe.objects.all()
+
+    classes = Classe.objects.all()
+
+    return render(request, "administrateur/classes.html", {
+        "classes": classes
     })
 
-@login_required
-@user_passes_test(is_admin)
+# AJOUTER CLASSE
 def classe_ajouter(request):
+
     from etudiant.forms import ClasseForm
+
     form = ClasseForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Classe ajoutée.")
-        return redirect('admin_classes')
-    return render(request, 'administrateur/classe_form.html', {'form': form, 'action': 'Ajouter'})
 
-@login_required
-@user_passes_test(is_admin)
-def classe_modifier(request, pk):
-    from etudiant.models import Classe
-    from etudiant.forms import ClasseForm
-    obj = get_object_or_404(Classe, pk=pk)
-    form = ClasseForm(request.POST or None, instance=obj)
     if form.is_valid():
-        form.save()
-        messages.success(request, "Classe modifiée.")
-        return redirect('admin_classes')
-    return render(request, 'administrateur/classe_form.html', {'form': form, 'action': 'Modifier'})
 
-@login_required
-@user_passes_test(is_admin)
+        form.save()
+
+        messages.success(request, "Classe ajoutée")
+
+        return redirect("admin_classes")
+
+    return render(request, "administrateur/classe_form.html", {
+        "form": form
+    })
+
+
+# SUPPRIMER CLASSE
+
 def classe_supprimer(request, pk):
+
     from etudiant.models import Classe
-    get_object_or_404(Classe, pk=pk).delete()
-    messages.success(request, "Classe supprimée.")
-    return redirect('admin_classes')
 
-# ── COMPTES ──
-@login_required
-@user_passes_test(is_admin)
+    classe = get_object_or_404(Classe, pk=pk)
+
+    classe.delete()
+
+    messages.success(request, "Classe supprimée")
+
+    return redirect("admin_classes")
+
+
+
+# COMPTES
+
+
 def comptes(request):
+
     from etudiant.models import Utilisateur
-    return render(request, 'administrateur/comptes.html', {
-        'comptes': Utilisateur.objects.all().order_by('-date_joined')
+
+    comptes = Utilisateur.objects.all()
+
+    return render(request, "administrateur/comptes.html", {
+        "comptes": comptes
     })
 
-@login_required
-@user_passes_test(is_admin)
+
+
+# ACTIVER / DÉSACTIVER
+
+
 def compte_activer(request, pk):
-    from etudiant.models import Utilisateur
-    obj = get_object_or_404(Utilisateur, pk=pk)
-    obj.is_active = not obj.is_active
-    obj.save()
-    messages.success(request, f"Compte {'activé' if obj.is_active else 'désactivé'}.")
-    return redirect('admin_comptes')
 
-@login_required
-@user_passes_test(is_admin)
+    from etudiant.models import Utilisateur
+
+    compte = get_object_or_404(Utilisateur, pk=pk)
+
+    compte.is_active = not compte.is_active
+
+    compte.save()
+
+    return redirect("admin_comptes")
+
+
+
+# SUPPRIMER COMPTE
+
+
 def compte_supprimer(request, pk):
+
     from etudiant.models import Utilisateur
-    get_object_or_404(Utilisateur, pk=pk).delete()
-    messages.success(request, "Compte supprimé.")
-    return redirect('admin_comptes')
 
-# ── ÉTUDIANTS ──
-@login_required
-@user_passes_test(is_admin)
+    compte = get_object_or_404(Utilisateur, pk=pk)
+
+    compte.delete()
+
+    messages.success(request, "Compte supprimé")
+
+    return redirect("admin_comptes")
+
+
+
+# ÉTUDIANTS
+
+
 def etudiants(request):
+
     from etudiant.models import Etudiant
-    return render(request, 'administrateur/etudiants.html', {
-        'etudiants': Etudiant.objects.all()
+
+    etudiants = Etudiant.objects.all()
+
+    return render(request, "administrateur/etudiants.html", {
+        "etudiants": etudiants
     })
-@login_required
-@user_passes_test(is_admin)
+
+
+# PROFIL
+
+
 def profil(request):
-    return render(request, 'administrateur/profil.html', {
-        'user': request.user
-    })
+
+    return render(request, "administrateur/profil.html")
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
+
+# INSCRIPTION
+
 
 def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            # 1. Créer le compte Django standard
-            user = form.save()
 
-            # 2. Créer Personne
-            from etudiant.models import Personne, Etudiant, Utilisateur
+    form = UserCreationForm(request.POST or None)
 
-            personne = Personne.objects.create(
-                nom=request.POST.get('last_name', ''),
-                prenom=request.POST.get('first_name', ''),
-            )
+    if form.is_valid():
 
-            # 3. Créer Utilisateur custom
-            utilisateur = Utilisateur.objects.create(
-                email=user.email or f"{user.username}@monapp.com",
-                password=user.password,
-                is_active=True,
-            )
+        form.save()
 
-            # 4. Créer Etudiant
-            from django.db import connection
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO etudiants
-                        (personne_ptr_id, utilisateur_id, classe_id)
-                    VALUES (%s, %s, NULL)
-                    """,
-                    [personne.id, utilisateur.id]
-                )
+        messages.success(request, "Compte créé")
 
-            messages.success(request, "Compte créé ! Connectez-vous.")
-            return redirect('login')
-    else:
-        form = UserCreationForm()
+        return redirect("login")
 
-    return render(request, 'register.html', {'form': form})
+    return render(request, "register.html", {
+        "form": form
+    })
+
+
+def profil(request):
+    from .models import Administrateur
+
+    admin = get_object_or_404(Administrateur, utilisateur=request.user)
+
+    return render(request, "administrateur/profil.html", {
+        "admin": admin,
+        "user": request.user
+    })

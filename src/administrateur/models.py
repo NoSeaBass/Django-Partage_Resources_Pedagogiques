@@ -37,3 +37,15 @@ class Affectation(models.Model):
     def __str__(self):
         role = "Responsable" if self.est_responsable else "Intervenant"
         return f"{self.enseignant} - {self.module.intitule} ({role})"
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Administrateur(models.Model):
+    utilisateur = models.OneToOneField(User, on_delete=models.CASCADE)
+    telephone   = models.CharField(max_length=20, blank=True)
+    photo       = models.ImageField(upload_to='admins/', blank=True, null=True)
+
+    def __str__(self):
+        return self.utilisateur.get_full_name() or self.utilisateur.username
