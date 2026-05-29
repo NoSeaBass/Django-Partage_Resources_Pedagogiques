@@ -1,6 +1,11 @@
-from django.shortcuts import render, redirect
+import calendar
+from datetime import date
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import InscriptionUtilisateurForm, EtudiantForm
+from .forms import InscriptionUtilisateurForm, EtudiantForm, RessourceForm, AnnonceForm
+from django.contrib.auth.decorators import login_required
+from .models import Annonce, Ressource
+from administrateur.models import Affectation, Module
 
 def inscription_etudiant(request):
     if request.method == 'POST':
@@ -17,7 +22,7 @@ def inscription_etudiant(request):
             etudiant.save()
 
             messages.success(request, "Inscription réussie !")
-            return redirect('utilisateurs:home')
+            return redirect('authentification:connexion')
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:
@@ -30,5 +35,100 @@ def inscription_etudiant(request):
     }
     return render(request, 'utilisateurs/etudiant/inscription.html', context)
 
+# src/utilisateurs/views.py
+
+def traitement_global(request):
+    if request.method == 'POST':
+        if 'btn_ressource' in request.POST:
+            # Assure-toi de passer le PROFIL enseignant (profil_enseignant), pas l'objet User
+            enseignant_profile = request.user.profil_enseignant
+            form = RessourceForm(request.POST, request.FILES, enseignant=enseignant_profile)
+
+            if form.is_valid():
+                # 1. Créer l'objet en mémoire sans le sauvegarder tout de suite
+                ressource = form.save(commit=False)
+
+                # 2. Associer l'enseignant courant au modèle
+                ressource.enseignant = enseignant_profile
+
+                # 3. Sauvegarder définitivement en base de données
+                ressource.save()
+
+                messages.success(request, "Ressource enregistrée.")
+        # Dans views.py
+        if 'btn_annonce' in request.POST:
+            form = AnnonceForm(request.POST, enseignant=request.user.profil_enseignant)
+            if form.is_valid():
+                annonce = form.save(commit=False)
+                annonce.enseignant = request.user.profil_enseignant # Association manuelle
+                annonce.save()
+
+    return redirect(request.META.get('HTTP_REFERER', 'utilisateurs:home'))
+
+# src/utilisateurs/views.py
+
+@login_required
 def home(request):
-    return render(request, 'utilisateurs/home.html')
+    annonces = Annonce.objects.none()
+    aujourdhui = date.today()
+    cal = calendar.monthcalendar(aujourdhui.year, aujourdhui.month)
+    nom_mois = aujourdhui.strftime("%B")
+
+    semaines = []
+    for semaine in cal:
+        semaines.append({
+            'jours': semaine,
+            'evenements': [] # Ici tu pourras injecter tes futurs événements
+        })
+
+    if request.user.is_etudiant:
+        if hasattr(request.user, 'profil_etudiant') and request.user.profil_etudiant.classe:
+            annonces = Annonce.objects.filter(
+                classe=request.user.profil_etudiant.classe
+            ).order_by('-date_datetime')
+
+    elif request.user.is_enseignant:
+        # 1. Récupérer les classes où l'enseignant intervient
+        classes_enseignees = Affectation.objects.filter(
+            enseignant=request.user.profil_enseignant
+        ).values_list('classe', flat=True)
+
+        # 2. Filtrer les annonces de ces classes et trier par date décroissante
+        annonces = Annonce.objects.filter(
+            classe__in=classes_enseignees
+        ).select_related('classe', 'enseignant').order_by('-date_datetime')
+
+    context = {
+        'annonces': annonces,
+        'cal': cal,
+        'semaines': semaines,
+        'nom_mois': nom_mois,
+        'aujourdhui': aujourdhui.day,
+    }
+    return render(request, 'utilisateurs/home.html', context)
+
+@login_required
+def modules(request):
+    modules = None
+
+    if request.user.is_enseignant:
+        modules = Module.objects.filter(affectations__enseignant=request.user.profil_enseignant).distinct()
+
+    elif request.user.is_etudiant:
+        if request.user.profil_etudiant.classe:
+            modules = request.user.profil_etudiant.classe.modules.all()
+        else:
+            modules = []
+
+    return render(request, 'utilisateurs/modules.html', {'modules': modules})
+
+@login_required
+def list_ressources(request, module_id):
+    module = get_object_or_404(Module, id=module_id)
+    ressources = Ressource.objects.filter(module=module).order_by('-date_ajout')
+
+    context = {
+        'module': module,
+        'ressources': ressources,
+    }
+    return render(request, 'utilisateurs/ressources.html', context)

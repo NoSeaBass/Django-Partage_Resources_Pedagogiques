@@ -1,32 +1,96 @@
 {% extends 'main.html' %}
 {% load static %}
 
-{% block extra_head %}
-    <link rel="stylesheet" href="">
-    <script src=""></script>
-    {% block app_extra_head %}{% endblock %}
-{% endblock %}
-
 {% block content %}
-<header>
-    <nav>
-        <div class="logo">
-            <a href="#" style="font-weight: bold; color: #333; font-size: 1.25rem;">UniShare</a>
+<div class="d-flex" id="wrapper">
+
+    <div class="bg-white border-end" id="sidebar-wrapper" style="width: 250px; min-height: 100vh;">
+        <div class="sidebar-heading p-4 fw-bold text-primary border-bottom">UniShare</div>
+
+        <div class="list-group list-group-flush">
+            <a href="{% url 'utilisateurs:home' %}" class="list-group-item list-group-item-action p-3">Home</a>
+            <a href="{% url 'utilisateurs:modules' %}" class="list-group-item list-group-item-action p-3">Modules</a>
+
+            {% if user.is_enseignant %}
+                <div class="p-3 fw-bold text-muted small text-uppercase">Enseignant</div>
+                <a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalRessource">
+                    Ajouter ressource
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">Gérer mes ressources</a>
+                {% if user.is_responsable %}
+                    <div class="p-3 fw-bold text-muted small text-uppercase">Enseignant responsable</div>
+                    <a href="#" class="list-group-item list-group-item-action">Gestion classe(s)</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalAnnonce">
+                    Nouvelle annonce
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            {% if user.is_etudiant %}
+                <div class="p-3 fw-bold text-muted small text-uppercase">Étudiant</div>
+                <a href="#" class="list-group-item list-group-item-action">Mes cours</a>
+                <a href="#" class="list-group-item list-group-item-action">Consulter annonces</a>
+                <a href="#" class="list-group-item list-group-item-action">Historique</a>
+            {% endif %}
         </div>
-        <ul class="nav-links">
-            <li><a href="{% url 'utilisateurs:home' %}">Home</a></li>
-            <li><a href="#">Modules</a></li>
-            <li><a href="#">Notifications</a></li>
-            <li><a href="#">Mon Compte</a></li>
-        </ul>
-    </nav>
-</header>
+    </div>
 
-<main>
-    {% block app_content %}{% endblock %}
-</main>
+    <div id="page-content-wrapper" class="flex-grow-1">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-text ms-auto">
+                    <a href="#" class="btn btn-outline-primary rounded-pill px-3">Mon Compte</a>
+                </span>
+            </div>
+        </nav>
 
-<footer>
-    <p>&copy; 2026 UniShare. All rights reserved.</p>
+        <main class="container-fluid p-4">
+            {% block app_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<footer class="text-center p-3 border-top bg-light">
+    <p class="mb-0 text-muted">&copy; 2026 UniShare.</p>
 </footer>
+
+<div class="modal fade" id="modalRessource" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'utilisateurs:traitement_global' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter une Ressource</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ ressource_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" name="btn_ressource" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAnnonce" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'utilisateurs:traitement_global' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Publier une Annonce</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ annonce_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" name="btn_annonce" class="btn btn-primary">Publier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,11 +1,9 @@
 from django.db import models
-from utilisateurs.models import Utilisateur, Enseignant
 
 # Create your models here.
 
-
 class Administrateur(models.Model):
-    utilisateur = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, primary_key=True, related_name='profil_admin')
+    utilisateur = models.OneToOneField('utilisateurs.Utilisateur', on_delete=models.CASCADE, primary_key=True, related_name='profil_admin')
     niveau_ces = models.IntegerField()
 
     def __str__(self):
@@ -21,13 +19,13 @@ class Classe(models.Model):
 
 class Module(models.Model):
     intitule = models.CharField(max_length=150)
-    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='modules')
+    classe   = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='modules')
 
     def __str__(self):
-        return self.intitule
+        return f"{self.intitule} | {self.classe.nom}"
 
 class Affectation(models.Model):
-    enseignant = models.ForeignKey(Enseignant, on_delete=models.CASCADE, related_name='affectations')
+    enseignant = models.ForeignKey('utilisateurs.Enseignant', on_delete=models.CASCADE, related_name='affectations')
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='affectations')
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='affectations')
     est_responsable = models.BooleanField(default=False)

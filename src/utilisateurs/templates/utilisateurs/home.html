@@ -1,5 +1,47 @@
 {% extends 'app/layout_user.html' %}
 
 {% block app_content %}
-Not Yet
+
+    <div class="p-4 bg-white rounded shadow-sm mb-4">
+        <h2 class="h4">Bienvenue, {{ user.prenom }} {{ user.nom }}</h2>
+        <p class="text-muted">Rôle : {{ user.get_role_display }}</p>
+    </div>
+
+    <div class="container mt-4">
+        <h3 class="text-center">{{ nom_mois }}</h3>
+
+        {% for semaine in semaines %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted border-bottom pb-2">Semaine {{ forloop.counter }}</h6>
+                <div class="row">
+                    {% for jour in semaine.jours %}
+                    <div class="col text-center p-2 {% if jour == aujourdhui %}bg-warning rounded{% endif %}">
+                        <span class="d-block font-weight-bold">{% if jour != 0 %}{{ jour }}{% endif %}</span>
+                        <small class="text-primary">
+                            {% if jour != 0 %}
+                            {% endif %}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% for annonce in annonces %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>{{ annonce.titre }}</h5>
+            <p>{{ annonce.contenu }}</p>
+            <small class="text-muted">
+                Publié le {{ annonce.date_datetime|date:"d M Y H:i" }} par {{ annonce.enseignant }}
+                <span class="mx-2">|</span>
+                <strong>{{ annonce.classe.nom }}</strong>
+            </small>
+        </div>
+    </div>
+    {% endfor %}
+
 {% endblock %}

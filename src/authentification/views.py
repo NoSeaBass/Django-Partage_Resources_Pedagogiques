@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from .forms import ConnexionForm
 
 def page_accueil(request):
@@ -13,8 +13,23 @@ def connexion_public(request):
     if request.method == 'POST':
         form = ConnexionForm(request.POST)
         if form.is_valid():
-            login(request, form.user)
-            return redirect('utilisateurs:home')
+            user = form.user
+            login(request, user)
+
+            if user.is_etudiant:
+                '''
+                Je bloque cette verification temporairement pour que je puisse verifier la page home
+
+                if not user.etudiant_a_une_classe:
+
+                    logout(request)
+                    messages.warning(request, "Votre compte est bien activé, mais vous n'êtes pas encore rattaché à une classe. Contactez l'administration.")
+
+                    return render(request, 'authentification/authentification.html', {'form': form})
+                '''
+                return redirect('utilisateurs:home')
+            elif user.is_enseignant:
+                return redirect('utilisateurs:home')
         else:
             messages.error(request, "Veuillez vérifier vos identifiants.")
     else:

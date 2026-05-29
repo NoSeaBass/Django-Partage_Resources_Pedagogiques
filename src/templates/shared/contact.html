@@ -3,13 +3,28 @@
 {% block title %}Contact - UniShare{% endblock %}
 
 {% block main_content %}
-<section class="contact-section">
-    <h1>Contactez-nous</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-5 text-center">
+                <h1 class="mb-4 text-primary">Contactez-nous</h1>
+                <p class="lead text-muted mb-5">
+                    Une question ou besoin d'aide ? Notre équipe est à votre disposition pour vous accompagner.
+                </p>
 
-    <div class="contact-info">
-        <p>Pour toute question ou assistance, vous pouvez nous joindre directement :</p>
-        <p><strong>Email :</strong> contact@unishare.edu</p>
-        <p><strong>Téléphone :</strong> +221 33 800 00 00</p>
+                <div class="d-flex flex-column gap-4">
+                    <div class="p-3 bg-light rounded">
+                        <h5 class="text-uppercase text-secondary small mb-1">Adresse Email</h5>
+                        <a href="mailto:contact@unishare.edu" class="h4 text-decoration-none text-primary">contact@unishare.edu</a>
+                    </div>
+
+                    <div class="p-3 bg-light rounded">
+                        <h5 class="text-uppercase text-secondary small mb-1">Téléphone</h5>
+                        <p class="h4 mb-0">+221 33 800 00 00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 {% endblock %}
