@@ -16,6 +16,7 @@
                 <a class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modalRessource">
                     Ajouter ressource
                 </a>
+                <a href="#" class="list-group-item list-group-item-action">Historique Etudiants</a>
                 <a href="#" class="list-group-item list-group-item-action">Gérer mes ressources</a>
                 {% if user.is_responsable %}
                     <div class="p-3 fw-bold text-muted small text-uppercase">Enseignant responsable</div>
@@ -28,9 +29,7 @@
 
             {% if user.is_etudiant %}
                 <div class="p-3 fw-bold text-muted small text-uppercase">Étudiant</div>
-                <a href="#" class="list-group-item list-group-item-action">Mes cours</a>
-                <a href="#" class="list-group-item list-group-item-action">Consulter annonces</a>
-                <a href="#" class="list-group-item list-group-item-action">Historique</a>
+                <a href="#" class="list-group-item list-group-item-action">...</a>
             {% endif %}
         </div>
     </div>
@@ -38,9 +37,12 @@
     <div id="page-content-wrapper" class="flex-grow-1">
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
             <div class="container-fluid">
-                <span class="navbar-text ms-auto">
-                    <a href="#" class="btn btn-outline-primary rounded-pill px-3">Mon Compte</a>
-                </span>
+                <span class="navbar-brand">UniShare</span>
+
+                <div class="d-flex ms-auto">
+                    <a href="#" class="btn btn-outline-primary rounded-pill px-3 me-2">Mon Compte</a>
+                    <a href="{% url 'authentification:deconnexion' %}" class="btn btn-outline-danger rounded-pill px-3">Deconnexion</a>
+                </div>
             </div>
         </nav>
 

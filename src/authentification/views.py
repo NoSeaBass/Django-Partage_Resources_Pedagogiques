@@ -17,8 +17,6 @@ def connexion_public(request):
             login(request, user)
 
             if user.is_etudiant:
-                '''
-                Je bloque cette verification temporairement pour que je puisse verifier la page home
 
                 if not user.etudiant_a_une_classe:
 
@@ -26,7 +24,6 @@ def connexion_public(request):
                     messages.warning(request, "Votre compte est bien activé, mais vous n'êtes pas encore rattaché à une classe. Contactez l'administration.")
 
                     return render(request, 'authentification/authentification.html', {'form': form})
-                '''
                 return redirect('utilisateurs:home')
             elif user.is_enseignant:
                 return redirect('utilisateurs:home')
@@ -36,3 +33,7 @@ def connexion_public(request):
         form = ConnexionForm()
 
     return render(request, 'authentification/authentification.html', {'form': form})
+
+def deconnexion(request):
+    logout(request)
+    return redirect('authentification:connexion')

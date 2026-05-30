@@ -64,6 +64,9 @@ class Enseignant(models.Model):
     utilisateur = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, primary_key=True, related_name='profil_enseignant')
     grade = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        return f"Pr. {self.utilisateur.nom} {self.utilisateur.prenom}"
+
 class Etudiant(models.Model):
     utilisateur = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, primary_key=True, related_name='profil_etudiant')
     NCE = models.CharField(max_length=50, unique=True)
@@ -110,7 +113,7 @@ class Historique(models.Model):
     ]
     action        = models.CharField(max_length=50, choices=ACTIONS_CHOICES)
     date_datetime = models.DateTimeField(auto_now_add=True)
-    ressource     = models.ForeignKey('Ressource', on_delete=models.CASCADE, related_name='historiques')
+    ressource = models.ForeignKey('Ressource', on_delete=models.CASCADE, related_name='historiques', null=True, blank=True)
     etudiant      = models.ForeignKey(Etudiant, on_delete=models.CASCADE, related_name='historiques')
 
     def __str__(self):

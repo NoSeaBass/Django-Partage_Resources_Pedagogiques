@@ -9,4 +9,5 @@ urlpatterns = [
     path('modules/', views.modules, name='modules'),
     path('traitement_global/', views.traitement_global, name='traitement_global'),
     path('list_ressources/<int:module_id>/', views.list_ressources, name='list_ressources'),
+    path('telecharger/<int:ressource_id>/', views.telecharger_ressource, name='telecharger_ressource'),
 ]

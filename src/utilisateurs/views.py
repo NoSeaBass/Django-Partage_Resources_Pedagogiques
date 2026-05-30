@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import InscriptionUtilisateurForm, EtudiantForm, RessourceForm, AnnonceForm
 from django.contrib.auth.decorators import login_required
-from .models import Annonce, Ressource
+from .models import Annonce, Ressource, Historique
 from administrateur.models import Affectation, Module
 
 def inscription_etudiant(request):
@@ -127,8 +127,30 @@ def list_ressources(request, module_id):
     module = get_object_or_404(Module, id=module_id)
     ressources = Ressource.objects.filter(module=module).order_by('-date_ajout')
 
+    if hasattr(request.user, 'profil_etudiant'):
+        etudiant = request.user.profil_etudiant
+        Historique.objects.create(
+            etudiant=etudiant,
+            action='consultation'
+        )
+
     context = {
         'module': module,
         'ressources': ressources,
     }
     return render(request, 'utilisateurs/ressources.html', context)
+
+@login_required
+def telecharger_ressource(request, ressource_id):
+    ressource = get_object_or_404(Ressource, id=ressource_id)
+
+    # Vérifie si l'utilisateur est un étudiant
+    if hasattr(request.user, 'profil_etudiant'):
+        Historique.objects.create(
+            etudiant=request.user.profil_etudiant,
+            action='telechargement',
+            ressource=ressource
+        )
+
+    # Redirige vers le fichier réel
+    return redirect(ressource.fichier.url)
