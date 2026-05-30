@@ -39,7 +39,6 @@ class Utilisateur(AbstractUser):
     def __str__(self):
         return f"{self.prenom} {self.nom} ({self.email})"
 
-    # Proprietes de commodite — evite les requetes supplementaires dans les vues
     @property
     def is_admin(self):
         return self.role == 'ADMIN'

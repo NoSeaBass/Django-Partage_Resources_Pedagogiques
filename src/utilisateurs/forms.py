@@ -51,7 +51,6 @@ class RessourceForm(forms.ModelForm):
         enseignant = kwargs.pop('enseignant', None)
         super().__init__(*args, **kwargs)
         if enseignant:
-            # On ne propose que les modules où l'enseignant est affecté
             self.fields['module'].queryset = Module.objects.filter(
                 affectations__enseignant=enseignant
             ).distinct()
@@ -70,12 +69,10 @@ class AnnonceForm(forms.ModelForm):
         enseignant = kwargs.pop('enseignant', None)
         super().__init__(*args, **kwargs)
         if enseignant:
-            # On récupère uniquement les ID des classes où l'enseignant est RESPONSABLE
             classes_responsable_ids = enseignant.affectations.filter(
                 est_responsable=True
             ).values_list('classe_id', flat=True)
 
-            # On filtre la liste déroulante
             self.fields['classe'].queryset = Classe.objects.filter(
                 id__in=classes_responsable_ids
             )
