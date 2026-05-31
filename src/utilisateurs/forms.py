@@ -76,3 +76,8 @@ class AnnonceForm(forms.ModelForm):
             self.fields['classe'].queryset = Classe.objects.filter(
                 id__in=classes_responsable_ids
             )
+
+class ModuleForm(forms.ModelForm):
+    class Meta:
+        model = Module
+        fields = ['intitule']

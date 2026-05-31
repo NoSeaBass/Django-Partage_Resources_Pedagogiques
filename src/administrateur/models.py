@@ -21,6 +21,9 @@ class Module(models.Model):
     intitule = models.CharField(max_length=150)
     classe   = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='modules')
 
+    class Meta:
+        unique_together = ('intitule', 'classe')
+
     def __str__(self):
         return f"{self.intitule} | {self.classe.nom}"
 
@@ -29,8 +32,8 @@ class Affectation(models.Model):
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='affectations')
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='affectations')
     est_responsable = models.BooleanField(default=False)
-    date_debut = models.DateTimeField()
-    date_fin = models.DateTimeField()
+    date_debut = models.DateTimeField(null=True, blank=True)
+    date_fin = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         role = "Responsable" if self.est_responsable else "Intervenant"
