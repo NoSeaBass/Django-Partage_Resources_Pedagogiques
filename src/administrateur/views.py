@@ -5,11 +5,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 from utilisateurs.models import Utilisateur, Enseignant, Etudiant
-from .models import Administrateur, Classe, Affectation  # ✅ tout depuis .models
+from .models import Administrateur, Classe, Affectation  
 
 
-# ── CONNEXION ───────────────────────────────────────────────
-
+#  CONNEXION 
 def admin_login(request):
     form = AuthenticationForm(request, data=request.POST or None)
     if request.method == "POST":
@@ -25,7 +24,7 @@ def admin_login(request):
     return render(request, "administrateur/login.html", {"form": form})
 
 
-# ── DASHBOARD ───────────────────────────────────────────────
+#  DASHBOARD 
 
 @login_required(login_url='admin_login')
 def dashboard(request):
@@ -37,7 +36,7 @@ def dashboard(request):
     })
 
 
-# ── ENSEIGNANTS ─────────────────────────────────────────────
+#  ENSEIGNANTS 
 
 @login_required(login_url='admin_login')
 def enseignants(request):
@@ -85,7 +84,7 @@ def enseignant_supprimer(request, pk):
     return redirect("admin_enseignants")
 
 
-# ── CLASSES ─────────────────────────────────────────────────
+#  CLASSES 
 
 @login_required(login_url='admin_login')
 def classes(request):
@@ -127,7 +126,7 @@ def classe_supprimer(request, pk):
     return redirect("admin_classes")
 
 
-# ── COMPTES ─────────────────────────────────────────────────
+# COMPTES 
 
 @login_required(login_url='admin_login')
 def comptes(request):
@@ -152,7 +151,7 @@ def compte_supprimer(request, pk):
     return redirect("admin_comptes")
 
 
-# ── ÉTUDIANTS ───────────────────────────────────────────────
+#  ÉTUDIANTS 
 
 @login_required(login_url='admin_login')
 def etudiants(request):
@@ -161,7 +160,7 @@ def etudiants(request):
     })
 
 
-# ── AFFECTATIONS ────────────────────────────────────────────
+#  AFFECTATIONS
 
 @login_required(login_url='admin_login')
 def affectations(request):
@@ -191,7 +190,7 @@ def affectation_supprimer(request, pk):
     return redirect("admin_affectations")
 
 
-# ── PROFIL ──────────────────────────────────────────────────
+#  PROFIL
 
 @login_required(login_url='admin_login')
 def profil(request):
