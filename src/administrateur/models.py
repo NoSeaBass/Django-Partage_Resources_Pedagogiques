@@ -2,7 +2,7 @@ from django.db import models
 from utilisateurs.models import Utilisateur, Enseignant
 
 
-# ── Administrateur ──────────────────────────────────────────
+# ── Administrateur 
 
 class Administrateur(models.Model):
     utilisateur = models.OneToOneField(
@@ -11,7 +11,6 @@ class Administrateur(models.Model):
         primary_key=True,
         related_name='profil_admin'
     )
-    niveau_ces = models.IntegerField()
     telephone  = models.CharField(max_length=20, blank=True)
     photo      = models.ImageField(upload_to='admins/', blank=True, null=True)
 
@@ -19,7 +18,7 @@ class Administrateur(models.Model):
         return f"Admin: {self.utilisateur.email}"
 
 
-# ── Classe ──────────────────────────────────────────────────
+# ── Classe 
 
 class Classe(models.Model):
     nom      = models.CharField(max_length=50)
@@ -30,7 +29,7 @@ class Classe(models.Model):
         return f"{self.nom} ({self.annee})"
 
 
-# ── Module ──────────────────────────────────────────────────
+# ── Module 
 
 class Module(models.Model):
     intitule = models.CharField(max_length=150)

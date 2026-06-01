@@ -1,5 +1,6 @@
 from django import forms
-from .models import Utilisateur, Etudiant
+from .models import Utilisateur
+from utilisateurs.models import Etudiant
 
 class InscriptionUtilisateurForm(forms.ModelForm):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
@@ -110,3 +111,5 @@ class AffectationForm(forms.ModelForm):
             'date_debut': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'date_fin'  : forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+        

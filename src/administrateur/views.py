@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
@@ -16,17 +16,25 @@ def admin_login(request):
             user = form.get_user()
             if Administrateur.objects.filter(utilisateur=user).exists():
                 login(request, user)
-                return redirect("admin_dashboard")
+                #return render(request, "administrateur/dashboard.html")
+                #return redirect("admin_dashboard")
+                return redirect("administrateur:admin_dashboard")
             else:
                 messages.error(request, "Accès réservé aux administrateurs.")
         else:
             messages.error(request, "Identifiants invalides.")
     return render(request, "administrateur/login.html", {"form": form})
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
+def admin_logout(request):
+    logout(request)
+    return redirect("admin_login")
 #  DASHBOARD 
 
-@login_required(login_url='admin_login')
+#@login_required(login_url='admin_login')
+login_url='administrateur:admin_login'
 def dashboard(request):
     return render(request, "administrateur/dashboard.html", {
         "nb_etudiants"  : Etudiant.objects.count(),
@@ -52,7 +60,7 @@ def enseignant_ajouter(request):
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Enseignant ajouté")
-        return redirect("admin_enseignants")
+        return redirect("administrateur:admin_enseignants")
     return render(request, "administrateur/enseignant_form.html", {"form": form})
 
 
@@ -100,7 +108,8 @@ def classe_ajouter(request):
     if form.is_valid():
         form.save()
         messages.success(request, "Classe ajoutée")
-        return redirect("admin_classes")
+        return redirect("administrateur:admin_classes")
+       
     return render(request, "administrateur/classe_form.html", {"form": form})
 
 
@@ -112,7 +121,8 @@ def classe_modifier(request, pk):
     if form.is_valid():
         form.save()
         messages.success(request, "Classe modifiée")
-        return redirect("admin_classes")
+        return redirect("administrateur:admin_classes")
+        
     return render(request, "administrateur/classe_form.html", {
         "form": form, "classe": classe
     })
@@ -123,7 +133,8 @@ def classe_supprimer(request, pk):
     classe = get_object_or_404(Classe, pk=pk)
     classe.delete()
     messages.success(request, "Classe supprimée")
-    return redirect("admin_classes")
+    return redirect("administrateur:admin_classes")
+    
 
 
 # COMPTES 
@@ -140,7 +151,7 @@ def compte_activer(request, pk):
     compte = get_object_or_404(Utilisateur, pk=pk)
     compte.is_active = not compte.is_active
     compte.save()
-    return redirect("admin_comptes")
+    return redirect("administrateur:admin_comptes")
 
 
 @login_required(login_url='admin_login')
@@ -148,27 +159,39 @@ def compte_supprimer(request, pk):
     compte = get_object_or_404(Utilisateur, pk=pk)
     compte.delete()
     messages.success(request, "Compte supprimé")
-    return redirect("admin_comptes")
+    return redirect("administrateur:admin_comptes")
 
 
 #  ÉTUDIANTS 
 
-@login_required(login_url='admin_login')
-def etudiants(request):
-    return render(request, "administrateur/etudiants.html", {
-        "etudiants": Etudiant.objects.select_related('utilisateur', 'classe').all()
-    })
 
 
 #  AFFECTATIONS
 
 @login_required(login_url='admin_login')
 def affectations(request):
-    return render(request, "administrateur/affectations.html", {
+    return render(request, "administrateur/affectation.html", {
         "affectations": Affectation.objects.select_related(
-            'enseignant__utilisateur', 'classe', 'module'
+            'enseignant__utilisateur', 'classe'
         ).all()
     })
+
+@login_required(login_url='admin_login')
+def affectation_ajouter(request):
+    from .forms import AffectationForm
+
+    form = AffectationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Classe affectée à l'enseignant avec succès.")
+        return redirect("administrateur:admin_affectation")
+
+    return render(
+        request,
+        "administrateur/affectation_form.html",
+        {"form": form}
+    )
 
 
 @login_required(login_url='admin_login')

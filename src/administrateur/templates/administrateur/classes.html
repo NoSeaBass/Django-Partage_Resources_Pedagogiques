@@ -6,7 +6,7 @@
 
 <h2>Liste des Classes</h2>
 
-<a href="{% url 'admin_classe_ajouter' %}">
+<a href="{% url 'administrateur:admin_classe_ajouter' %}">
     Ajouter une classe
 </a>
 
@@ -34,13 +34,13 @@
             <td>{{ classe.etudiants.count }}</td>
 
             <td>
-                <a href="{% url 'admin_classe_modifier' classe.pk %}">
+                <a href="{% url 'administrateur:admin_classe_modifier' classe.pk %}">
                     Modifier
                 </a>
 
                 |
 
-                <a href="{% url 'admin_classe_supprimer' classe.pk %}">
+                <a href="{% url 'administrateur:admin_classe_supprimer' classe.pk %}">
                     Supprimer
                 </a>
             </td>

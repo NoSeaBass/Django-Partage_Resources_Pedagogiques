@@ -1,6 +1,8 @@
-{% extends "
-main.html" %}
+{% extends "main.html" %}
 {% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css'%}">
+{% endblock %}
 {% block title %}Dashboard Administration{% endblock %}
 
 {% block content %}
@@ -14,7 +16,7 @@ main.html" %}
     </div>
     <div class="header-actions">
       <a href="/profil/" class="btn btn-ghost">Profil</a>
-      <form method="post" action="{% url 'logout' %}">
+      <form method="post" action="{% url 'administrateur:logout' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Déconnexion</button>
       </form>
@@ -45,17 +47,19 @@ main.html" %}
   <div class="section">
     <h2>Actions rapides</h2>
     <div class="actions-grid">
-      <a href="{% url 'admin_enseignants' %}" class="action-card">
+      <a href="{% url 'administrateur:admin_enseignants' %}" class="action-card">
         <div class="action-icon">👨‍🏫</div> Enseignants
       </a>
-      <a href="{% url 'admin_classes' %}" class="action-card">
+      <a href="{% url 'administrateur:admin_classes' %}" class="action-card">
         <div class="action-icon">🚪</div> Classes
       </a>
-      <a href="{% url 'admin_comptes' %}" class="action-card">
+      <a href="{% url 'administrateur:admin_comptes' %}" class="action-card">
         <div class="action-icon">🪪</div> Comptes
       </a>
-      <a href="{% url 'admin_etudiants' %}" class="action-card">
-        <div class="action-icon">🎓</div> Étudiants
+
+
+       <a href="{% url 'administrateur:admin_affectations' %}" class="action-card">
+        <div class="action-icon"></div> Affectations
       </a>
     </div>
   </div>
