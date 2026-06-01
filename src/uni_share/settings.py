@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'core',
+
     'administrateur',
     'utilisateurs',
     'authentification',
@@ -71,6 +73,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'utilisateurs.context_processors.modal_forms',
+                'utilisateurs.context_processors.classes_responsables_processor',
+                'utilisateurs.context_processors.modules_process',
+                'utilisateurs.context_processors.notifications_processor',
             ],
         },
     },
@@ -135,6 +141,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/administrateur/dashboard/'

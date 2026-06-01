@@ -1,5 +1,4 @@
 from django.db import models
-from utilisateurs.models import Utilisateur, Enseignant
 
 
 # ── Administrateur 
@@ -33,14 +32,13 @@ class Classe(models.Model):
 
 class Module(models.Model):
     intitule = models.CharField(max_length=150)
-    classe   = models.ForeignKey(
-        Classe,
-        on_delete=models.CASCADE,
-        related_name='modules'
-    )
+    classe   = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='modules')
+
+    class Meta:
+        unique_together = ('intitule', 'classe')
 
     def __str__(self):
-        return self.intitule
+        return f"{self.intitule} | {self.classe.nom}"
 
 
 # ── Affectation ─────────────────────────────────────────────
@@ -57,7 +55,6 @@ class Affectation(models.Model):
         related_name='affectations'
     )
 
-    # ✅ nullable : géré par le prof responsable, pas l'admin
     module          = models.ForeignKey(
         Module,
         on_delete=models.SET_NULL,
@@ -67,8 +64,8 @@ class Affectation(models.Model):
     )
 
     est_responsable = models.BooleanField(default=False)
-    date_debut      = models.DateTimeField()
-    date_fin        = models.DateTimeField()
+    date_debut      = models.DateTimeField(null=True, blank=True)
+    date_fin        = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('enseignant', 'classe')
