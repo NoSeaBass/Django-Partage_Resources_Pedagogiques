@@ -15,8 +15,8 @@ def connexion_public(request):
         if form.is_valid():
             login(request, form.user)
             return redirect('utilisateurs:home')
-        else:
-            messages.error(request, "Veuillez vérifier vos identifiants.")
+       # else:
+            #messages.error(request, "Veuillez vérifier vos identifiants.")
     else:
         form = ConnexionForm()
 

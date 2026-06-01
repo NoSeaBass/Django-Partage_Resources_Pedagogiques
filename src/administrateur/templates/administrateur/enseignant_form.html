@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% block title %}{{ action }} Enseignant{% endblock %}
 
 {% block extra_css %}
@@ -118,7 +118,8 @@
       <button type="submit" class="btn-submit">
         <i class="bi bi-check-lg me-2"></i>{{ action }}
       </button>
-      <a href="{% url 'admin_enseignants' %}" class="btn-annuler">Annuler</a>
+      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-ajouter">Ajouter</a>
+      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-annuler">Annuler</a>
     </div>
 
   </form>
