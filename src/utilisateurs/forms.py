@@ -2,6 +2,7 @@ from django import forms
 from .models import Utilisateur, Etudiant, Ressource, Annonce
 from administrateur.models import Classe, Module
 
+
 class InscriptionUtilisateurForm(forms.ModelForm):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
     password_conf = forms.CharField(label="Confirmer le mot de passe", widget=forms.PasswordInput)
@@ -30,6 +31,7 @@ class InscriptionUtilisateurForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
 
 class EtudiantForm(forms.ModelForm):
     class Meta:

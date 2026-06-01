@@ -6,9 +6,10 @@ app_name = 'administrateur'
 urlpatterns = [
 
     path('login/', views.admin_login, name='admin_login'),
+    path("logout/", views.admin_logout, name="logout"),
     path('profil/', views.profil, name='admin_profil'),
     # Dashboard
-    path('dashboard/',                       views.dashboard,            name='admin_dashboard'),
+    path('admin_dashboard/',                       views.dashboard,            name='admin_dashboard'),
 
     # Enseignants
     path('enseignants/',                     views.enseignants,           name='admin_enseignants'),
@@ -28,5 +29,8 @@ urlpatterns = [
     path('comptes/<int:pk>/supprimer/',      views.compte_supprimer,      name='admin_compte_supprimer'),
 
     # Étudiants
-    path('etudiants/',                       views.etudiants,             name='admin_etudiants'),
+
+    path('affectations/',views.affectations, name='admin_affectations'),
+
+path('affectations/ajouter/',views.affectation_ajouter,name='admin_affectation_ajouter'),
 ]

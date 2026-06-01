@@ -1,74 +1,73 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% block title %}Gérer les Comptes{% endblock %}
 
 {% block content %}
 
-<p style="font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;">
-  <a href="{% url 'admin_dashboard' %}" style="color:#e94560;text-decoration:none;">
-    <i class="bi bi-house-fill"></i> Dashboard
-  </a> › Comptes
+<p>
+  <a href="{% url 'administrateur:admin_dashboard' %}">
+    Dashboard
+  </a>
+  › Comptes
 </p>
 
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
-  <h1 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;margin:0;">
-    <i class="bi bi-person-gear me-2" style="color:#22c55e"></i>Gestion des Comptes
-  </h1>
-</div>
+<h1>Gestion des Comptes</h1>
 
-<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;">
-  <table style="width:100%;border-collapse:collapse;color:var(--text);">
-    <thead>
-      <tr style="background:rgba(255,255,255,.05);">
-        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">#</th>
-        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Email</th>
-        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Date création</th>
-        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Statut</th>
-        <th style="padding:.9rem 1.2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:left;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for compte in comptes %}
-      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
-        <td style="padding:.85rem 1.2rem;color:var(--muted);">{{ forloop.counter }}</td>
-        <td style="padding:.85rem 1.2rem;">
-          <i class="bi bi-person-circle me-2" style="color:#22c55e"></i>{{ compte.email }}
-        </td>
-        <td style="padding:.85rem 1.2rem;">
-          {{ compte.date_joined|date:"d/m/Y" }}
-        </td>
-        <td style="padding:.85rem 1.2rem;">
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Email</th>
+      <th>Date création</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for compte in comptes %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+
+      <td>{{ compte.email }}</td>
+
+      <td>
+        {{ compte.date_joined|date:"d/m/Y" }}
+      </td>
+
+      <td>
+        {% if compte.is_active %}
+          Actif
+        {% else %}
+          Inactif
+        {% endif %}
+      </td>
+
+      <td>
+        <a href="{% url 'administrateur:admin_compte_activer' compte.pk %}">
           {% if compte.is_active %}
-            <span style="background:rgba(34,197,94,.15);color:#22c55e;border-radius:6px;padding:.2rem .6rem;font-size:.82rem;font-weight:700;">
-              Actif
-            </span>
+            Désactiver
           {% else %}
-            <span style="background:rgba(233,69,96,.15);color:#e94560;border-radius:6px;padding:.2rem .6rem;font-size:.82rem;font-weight:700;">
-              Inactif
-            </span>
+            Activer
           {% endif %}
-        </td>
-        <td style="padding:.85rem 1.2rem;display:flex;gap:.5rem;">
-          <a href="{% url 'admin_compte_activer' compte.pk %}"
-             style="background:rgba(234,179,8,.15);color:#eab308;border-radius:6px;padding:.3rem .7rem;font-size:.82rem;text-decoration:none;">
-            <i class="bi bi-toggle-on"></i>
-            {% if compte.is_active %}Désactiver{% else %}Activer{% endif %}
-          </a>
-          <a href="{% url 'admin_compte_supprimer' compte.pk %}"
-             style="background:rgba(233,69,96,.15);color:#e94560;border-radius:6px;padding:.3rem .7rem;font-size:.82rem;text-decoration:none;"
-             onclick="return confirm('Supprimer ce compte ?')">
-            <i class="bi bi-trash-fill"></i> Supprimer
-          </a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">
-          Aucun compte enregistré.
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+        </a>
+
+        |
+
+        <a href="{% url 'administrateur:admin_compte_supprimer' compte.pk %}"
+           onclick="return confirm('Supprimer ce compte ?')">
+          Supprimer
+        </a>
+      </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+      <td colspan="5">
+        Aucun compte enregistré.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
