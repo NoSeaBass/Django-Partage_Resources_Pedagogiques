@@ -29,6 +29,8 @@ Thumbs.db
 
 # Médias (Tes uploads utilisateurs)
 media/
+!media/ressources/Reglements.pdf
+!media/admins/face.jpeg
 
 # Fichiers personnels ou spécifiques au projet
 Postgresql.session.sql
