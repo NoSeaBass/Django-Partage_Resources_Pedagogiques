@@ -1,0 +1,45 @@
+{% extends 'app/layout_user.html' %}
+
+{% block app_content %}
+<div class="container py-4">
+    <h4 class="mb-4 text-primary">Mes Modules</h4>
+
+    <div class="bg-white p-4 rounded shadow-sm">
+        {% if user.is_etudiant %}
+            {% if user.profil_etudiant.classe %}
+                <div class="list-group list-group-flush">
+                    {% for module in user.profil_etudiant.classe.modules.all %}
+                        <a href="{% url 'utilisateurs:list_ressources' module.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">{{ module.intitule }}</span>
+                            <small class="text-muted">{{ module.classe.nom }}</small>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        {% elif user.is_enseignant %}
+            <div class="list-group list-group-flush">
+                {% for module in modules_gérés %}
+                    <a href="{% url 'utilisateurs:list_ressources' module.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold text-dark">{{ module.intitule }}</span>
+                            <div class="small text-muted">{{ module.classe.nom }}</div>
+                        </div>
+                    </a>
+                {% endfor %}
+
+                {% for module in modules_responsable %}
+                    {% if module not in modules_gérés %}
+                        <a href="{% url 'utilisateurs:list_ressources' module.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-bold text-success">{{ module.intitule }}</span>
+                                <div class="small text-muted">{{ module.classe.nom }}</div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
