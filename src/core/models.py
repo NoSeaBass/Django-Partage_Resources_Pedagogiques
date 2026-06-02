@@ -37,6 +37,7 @@ class Utilisateur(AbstractUser):
         ('ETUDIANT',     'Etudiant'),
     ]
 
+    username = models.CharField(max_length=150, null=True, blank=True)
     email     = models.EmailField(unique=True)
     nom       = models.CharField(max_length=100)
     prenom    = models.CharField(max_length=100)
@@ -44,7 +45,7 @@ class Utilisateur(AbstractUser):
     role      = models.CharField(max_length=20, choices=ROLES, default='ETUDIANT')
 
     USERNAME_FIELD  = 'email'
-    REQUIRED_FIELDS = ['username', 'prenom', 'nom']
+    REQUIRED_FIELDS = ['prenom', 'nom']
 
     objects = UtilisateurManager()
 

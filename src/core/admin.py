@@ -5,7 +5,6 @@ from .models import (
     Etudiant, Module, Affectation, Ressource, Annonce
 )
 
-# 1. Configuration des profils utilisateur
 @admin.register(Utilisateur)
 class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'nom', 'prenom', 'role', 'get_profil_nce')
@@ -15,13 +14,11 @@ class CustomUserAdmin(UserAdmin):
     )
 
     def get_profil_nce(self, obj):
-        # Utilisation d'un accès sécurisé pour éviter l'exception
         if obj.role == 'ETUDIANT' and hasattr(obj, 'profil_etudiant'):
             return obj.profil_etudiant.NCE
         return "-"
     get_profil_nce.short_description = 'NCE Etudiant'
 
-# 2. Gestion des Classes et Enseignants
 @admin.register(Classe)
 class ClasseAdmin(admin.ModelAdmin):
     list_display = ('nom', 'annee', 'get_effectif')
@@ -37,7 +34,6 @@ class AffectationAdmin(admin.ModelAdmin):
     list_filter = ('classe', 'est_responsable')
     list_select_related = ('enseignant', 'classe', 'module')
 
-# 3. Gestion des ressources pédagogiques
 @admin.register(Ressource)
 class RessourceAdmin(admin.ModelAdmin):
     list_display = ('titre', 'module', 'enseignant', 'date_ajout')
@@ -50,7 +46,6 @@ class ModuleAdmin(admin.ModelAdmin):
     list_display = ('intitule', 'classe')
     list_filter = ('classe',)
 
-# 4. Enregistrement des autres modèles
 @admin.register(Administrateur)
 class AdministrateurAdmin(admin.ModelAdmin):
     list_display = ('utilisateur',)

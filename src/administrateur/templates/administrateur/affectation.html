@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+
+{% block title %}Affectations{% endblock %}
+
+{% block content %}
+
+<h2>Liste des Affectations</h2>
+
+<p>
+    <a href="{% url 'administrateur:admin_affectation_ajouter' %}">
+        Affecter une classe à un professeur
+    </a>
+</p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Professeur</th>
+            <th>Classe</th>
+            <th>Module</th>
+            <th>Responsable</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in affectations %}
+        <tr>
+            <td>
+                {{ a.enseignant.utilisateur.prenom }}
+                {{ a.enseignant.utilisateur.nom }}
+            </td>
+
+            <td>{{ a.classe.nom }}</td>
+
+            <td>
+                {% if a.module %}
+                    {{ a.module.intitule }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+
+            <td>
+                {% if a.est_responsable %}
+                    Oui
+                {% else %}
+                    Non
+                {% endif %}
+            </td>
+
+            <td>{{ a.date_debut }}</td>
+            <td>{{ a.date_fin }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">
+                Aucune affectation enregistrée.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -35,8 +35,6 @@ class EtudiantForm(forms.ModelForm):
         fields = ['NCE']
 
 
-#  Enseignant
-
 class EnseignantForm(forms.Form):
     prenom     = forms.CharField(max_length=100, label="Prénom")
     nom        = forms.CharField(max_length=100, label="Nom")
@@ -63,8 +61,6 @@ class EnseignantForm(forms.Form):
             return Enseignant.objects.create(utilisateur=u)
 
 
-#  Classe 
-
 class ClasseForm(forms.ModelForm):
     class Meta:
         model  = Classe
@@ -75,8 +71,6 @@ class ClasseForm(forms.ModelForm):
         if not self.initial.get('annee'):
             self.initial['annee'] = date.today().year
 
-
-#  Affectation
 
 class AffectationForm(forms.ModelForm):
     class Meta:

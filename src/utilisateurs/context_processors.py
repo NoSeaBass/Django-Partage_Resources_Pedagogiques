@@ -43,7 +43,6 @@ def classes_responsables_processor(request):
 
 def notifications_processor(request):
     if request.user.is_authenticated and request.user.is_etudiant:
-        # On vérifie d'abord si le profil étudiant existe
         profil_etudiant = getattr(request.user, 'profil_etudiant', None)
         if profil_etudiant:
             notifs = Notification.objects.filter(

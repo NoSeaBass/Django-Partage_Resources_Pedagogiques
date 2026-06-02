@@ -233,6 +233,20 @@ def gestion_classe(request, classe_id):
         elif 'retirer_module' in request.POST:
             Affectation.objects.filter(pk=request.POST.get('aff_id')).delete()
 
+        if 'ajouter' in request.POST:
+            etudiant_id = request.POST.get('etudiant_id')
+            etudiant = Etudiant.objects.get(pk=etudiant_id)
+            etudiant.classe = classe
+            etudiant.save()
+            messages.success(request, "Étudiant ajouté à la classe.")
+
+        elif 'retirer' in request.POST:
+            etudiant_id = request.POST.get('etudiant_id')
+            etudiant = Etudiant.objects.get(pk=etudiant_id)
+            etudiant.classe = None
+            etudiant.save()
+            messages.success(request, "Étudiant retiré de la classe.")
+
         if 'ajouter_module_classe' in request.POST:
             form = ModuleForm(request.POST)
             if form.is_valid():

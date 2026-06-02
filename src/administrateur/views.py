@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from core.models import Utilisateur, Enseignant, Etudiant, Administrateur, Classe, Affectation
 
 
-#  CONNEXION 
 def admin_login(request):
     form = AuthenticationForm(request, data=request.POST or None)
     if request.method == "POST":
@@ -24,13 +23,9 @@ def admin_login(request):
             messages.error(request, "Identifiants invalides.")
     return render(request, "administrateur/login.html", {"form": form})
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
 def admin_logout(request):
     logout(request)
-    return redirect("admin_login")
-#  DASHBOARD 
+    return redirect("administrateur:admin_login")
 
 #@login_required(login_url='admin_login')
 login_url='administrateur:admin_login'
@@ -42,8 +37,6 @@ def dashboard(request):
         "nb_comptes"    : Utilisateur.objects.count(),
     })
 
-
-#  ENSEIGNANTS 
 
 @login_required(login_url='admin_login')
 def enseignants(request):
@@ -90,8 +83,6 @@ def enseignant_supprimer(request, pk):
     return redirect("administrateur:admin_enseignants")
 
 
-#  CLASSES 
-
 @login_required(login_url='admin_login')
 def classes(request):
     return render(request, "administrateur/classes.html", {
@@ -135,8 +126,6 @@ def classe_supprimer(request, pk):
     
 
 
-# COMPTES 
-
 @login_required(login_url='admin_login')
 def comptes(request):
     return render(request, "administrateur/comptes.html", {
@@ -159,12 +148,6 @@ def compte_supprimer(request, pk):
     messages.success(request, "Compte supprimé")
     return redirect("administrateur:admin_comptes")
 
-
-#  ÉTUDIANTS 
-
-
-
-#  AFFECTATIONS
 
 @login_required(login_url='admin_login')
 def affectations(request):
@@ -210,8 +193,6 @@ def affectation_supprimer(request, pk):
     messages.success(request, "Affectation supprimée")
     return redirect("administrateur:admin_affectations")
 
-
-#  PROFIL
 
 @login_required(login_url='admin_login')
 def profil(request):
