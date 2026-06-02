@@ -1,0 +1,106 @@
+{% extends "main.html" %}
+{% block title %}{{ action }} Enseignant{% endblock %}
+
+{% block extra_head %}
+<style>
+  .form-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .form-card h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .form-label {
+    font-size: .82rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .05em; margin-bottom: .4rem;
+    display: block;
+  }
+  .form-control {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px; color: var(--text);
+    padding: .75rem 1rem; font-size: .95rem;
+    width: 100%; margin-bottom: 1rem;
+    transition: border-color .2s;
+  }
+  .form-control:focus {
+    border-color: #e94560;
+    outline: none;
+    background: rgba(255,255,255,.07);
+    color: var(--text);
+  }
+  .btn-submit {
+    background: #e94560; color: #fff;
+    border: none; border-radius: 10px;
+    padding: .8rem 2rem; font-size: 1rem;
+    font-weight: 700; cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-submit:hover { opacity: .85; }
+  .btn-annuler {
+    background: rgba(255,255,255,.05);
+    color: var(--muted); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px; padding: .8rem 2rem;
+    font-size: 1rem; text-decoration: none;
+    margin-left: 1rem;
+  }
+  .section-label {
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem; font-weight: 700;
+    color: #e94560; text-transform: uppercase;
+    letter-spacing: .08em; margin: 1.5rem 0 .8rem;
+    border-bottom: 1px solid rgba(233,69,96,.2);
+    padding-bottom: .4rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h2><i class="bi bi-person-plus me-2" style="color:#e94560"></i>{{ action }} un enseignant</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <p class="section-label">Informations personnelles</p>
+    <div class="row g-3">
+      <div class="col-6">
+        <label class="form-label">Nom</label>
+        <input type="text" name="nom" class="form-control" value="{{ form.nom.value|default:'' }}" required />
+      </div>
+      <div class="col-6">
+        <label class="form-label">Prénom</label>
+        <input type="text" name="prenom" class="form-control" value="{{ form.prenom.value|default:'' }}" required />
+      </div>
+    </div>
+
+    <label class="form-label">Téléphone</label>
+    <input type="text" name="telephone" class="form-control" value="{{ form.telephone.value|default:'' }}" />
+
+    <p class="section-label">Compte utilisateur</p>
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" required />
+
+    <label class="form-label">Mot de passe</label>
+    <input type="password" name="password" class="form-control" placeholder="••••••••" {% if action == 'Ajouter' %}required{% endif %} />
+
+    <div style="margin-bottom: 1rem;">
+      <input type="checkbox" name="est_responsable" id="est_responsable" {% if form.est_responsable.value %}checked{% endif %}>
+      <label for="est_responsable" style="color: var(--muted); font-size: .9rem;">Définir comme enseignant responsable</label>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <button type="submit" class="btn-submit">Enregistrer{{ action }}</button>
+      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-annuler">Annuler</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

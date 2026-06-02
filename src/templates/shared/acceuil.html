@@ -1,0 +1,44 @@
+{% extends 'shared/layout_public.html' %}
+
+{% block title %}Accueil - UniShare{% endblock %}
+
+{% block main_content %}
+<section class="p-5 mb-4 bg-light rounded-3 text-center border">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Bienvenue sur UniShare</h1>
+        <p class="col-md-8 fs-4 mx-auto mt-3">
+            Plateforme collaborative de partage de ressources pédagogiques entre enseignants et étudiants.
+        </p>
+        <div class="mt-4">
+            <a href="{% url 'utilisateurs:inscription_etudiant' %}" class="btn btn-primary btn-lg px-4 me-md-2">S'inscrire</a>
+            <a href="{% url 'authentification:connexion' %}" class="btn btn-outline-secondary btn-lg px-4">Se connecter</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <h2 class="text-center mb-5">Pourquoi choisir UniShare ?</h2>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-primary">Partage de ressources</h3>
+                    <p class="card-text">
+                        Accédez instantanément aux cours, documents et supports pédagogiques spécifiques à votre classe et à vos modules.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-primary">Communication simplifiée</h3>
+                    <p class="card-text">
+                        Consultez les annonces de vos professeurs et gardez un contact fluide avec votre communauté éducative.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

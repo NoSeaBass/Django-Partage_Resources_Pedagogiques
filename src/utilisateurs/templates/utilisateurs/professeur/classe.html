@@ -1,0 +1,104 @@
+{% extends 'app/layout_user.html' %}
+
+{% block app_content %}
+<div class="p-4 bg-white rounded shadow-sm">
+    <h3 class="mb-4">Gestion de la classe : {{ classe.nom }}</h3>
+
+    <div class="row">
+        <div class="col-md-6 border-end">
+            <h5>Étudiants</h5>
+            <div class="mb-4">
+                <h6>Dans la classe</h6>
+                <ul class="list-group mb-3">
+                    {% for e in etudiants_dans_classe %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ e.utilisateur.nom }} {{ e.utilisateur.prenom }}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="etudiant_id" value="{{ e.pk }}">
+                            <button name="retirer" class="btn btn-sm btn-outline-danger">Retirer</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <h6>Hors classe</h6>
+            <ul class="list-group">
+                {% for e in etudiants_sans_classe %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ e.utilisateur.nom }} {{ e.utilisateur.prenom }}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="etudiant_id" value="{{ e.pk }}">
+                        <button name="ajouter" class="btn btn-sm btn-outline-success">Ajouter</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h5>Professeurs du module</h5>
+            <table class="table table-sm">
+                <thead><tr><th>Nom</th><th>Modules gérés</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for prof in profs_de_classe %}
+                    <tr>
+                        <td>{{ prof }}</td>
+                        <td>
+                            {% for aff in prof.affectations.all %}
+                                {% if aff.classe == classe and aff.module %}
+                                    <span class="badge bg-info">{{ aff.module.intitule }}
+                                        <form method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="aff_id" value="{{ aff.pk }}">
+                                            <button name="retirer_module" class="btn btn-link btn-sm text-danger">x</button>
+                                        </form>
+                                    </span>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" class="d-flex">
+                                {% csrf_token %}
+                                <input type="hidden" name="enseignant_id" value="{{ prof.pk }}">
+                                <select name="module_id" class="form-select form-select-sm">
+                                    {% for mod in tous_modules %}
+                                        <option value="{{ mod.pk }}">{{ mod.intitule }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button name="ajouter_module" class="btn btn-sm btn-success">+</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
+    Ajouter un nouveau module
+</button>
+
+<div class="modal fade" id="modalModule" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">Nouveau Module</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="intitule" class="form-control" placeholder="Intitulé du module" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" name="ajouter_module_classe" class="btn btn-success">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

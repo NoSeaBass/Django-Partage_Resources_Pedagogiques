@@ -1,0 +1,56 @@
+{% extends 'app/layout_user.html' %}
+
+{% block app_content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ nom_mois|capfirst }}</h5>
+                <div class="row text-center mb-2">
+                    <div class="col font-weight-bold">L</div><div class="col">M</div><div class="col">M</div>
+                    <div class="col">J</div><div class="col">V</div><div class="col">S</div><div class="col">D</div>
+                </div>
+                {% for semaine in semaines %}
+                <div class="row text-center mb-1">
+                    {% for jour in semaine.jours %}
+                    <div class="col p-1">
+                        {% if jour != 0 %}
+                            <span class="d-block rounded {% if jour == aujourdhui %}bg-primary text-white{% endif %}" style="width: 30px; height: 30px; line-height: 30px; margin: auto;">
+                                {{ jour }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <h4 class="mb-3">Dernières annonces</h4>
+        {% for annonce in annonces %}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title text-dark mb-0">{{ annonce.titre }}</h5>
+                    <span class="badge bg-light text-primary border">{{ annonce.classe.nom }}</span>
+                </div>
+                <p class="card-text text-secondary">{{ annonce.contenu }}</p>
+                <div class="d-flex align-items-center mt-3 border-top pt-2">
+                    <small class="text-muted">
+                        <i class="bi bi-person"></i> {{ annonce.enseignant }}
+                        <i class="bi bi-clock ms-3"></i> {{ annonce.date_datetime|date:"d M Y, H:i" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center p-5 text-muted">
+            <i class="bi bi-journal-x" style="font-size: 3rem;"></i>
+            <p>Aucune annonce pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "main.html" %}
+{% block title %}Gérer les Comptes{% endblock %}
+
+{% block content %}
+
+<p>
+  <a href="{% url 'administrateur:admin_dashboard' %}">
+    Dashboard
+  </a>
+  › Comptes
+</p>
+
+<h1>Gestion des Comptes</h1>
+
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Email</th>
+      <th>Date création</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for compte in comptes %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+
+      <td>{{ compte.email }}</td>
+
+      <td>
+        {{ compte.date_joined|date:"d/m/Y" }}
+      </td>
+
+      <td>
+        {% if compte.is_active %}
+          Actif
+        {% else %}
+          Inactif
+        {% endif %}
+      </td>
+
+      <td>
+        <a href="{% url 'administrateur:admin_compte_activer' compte.pk %}">
+          {% if compte.is_active %}
+            Désactiver
+          {% else %}
+            Activer
+          {% endif %}
+        </a>
+
+        |
+
+        <a href="{% url 'administrateur:admin_compte_supprimer' compte.pk %}"
+           onclick="return confirm('Supprimer ce compte ?')">
+          Supprimer
+        </a>
+      </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+      <td colspan="5">
+        Aucun compte enregistré.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

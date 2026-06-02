@@ -1,0 +1,59 @@
+{% extends "main.html" %}
+
+{% block title %}Classes{% endblock %}
+
+{% block content %}
+
+<h2>Liste des Classes</h2>
+
+<a href="{% url 'administrateur:admin_classe_ajouter' %}">
+    Ajouter une classe
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th>Niveau</th>
+            <th>Année</th>
+            <th>Étudiants</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for classe in classes %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ classe.nom }}</td>
+            <td>{{ classe.niveau }}</td>
+            <td>{{ classe.annee }}</td>
+            <td>{{ classe.etudiants.count }}</td>
+
+            <td>
+                <a href="{% url 'administrateur:admin_classe_modifier' classe.pk %}">
+                    Modifier
+                </a>
+
+                |
+
+                <a href="{% url 'administrateur:admin_classe_supprimer' classe.pk %}">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+            <td colspan="6">
+                Aucune classe trouvée
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
