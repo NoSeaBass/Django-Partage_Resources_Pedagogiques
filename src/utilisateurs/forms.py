@@ -1,6 +1,5 @@
 from django import forms
-from .models import Utilisateur, Etudiant, Ressource, Annonce
-from administrateur.models import Classe, Module
+from core.models import Utilisateur, Etudiant, Ressource, Annonce, Classe, Module
 
 
 class InscriptionUtilisateurForm(forms.ModelForm):

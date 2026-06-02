@@ -1,6 +1,9 @@
 from django import forms
-from .models import Utilisateur
-from utilisateurs.models import Etudiant
+from datetime import date
+from django.contrib.auth.hashers import make_password
+from core.models import Utilisateur, Etudiant, Enseignant, Classe, Affectation
+
+
 
 class InscriptionUtilisateurForm(forms.ModelForm):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
@@ -32,65 +35,32 @@ class EtudiantForm(forms.ModelForm):
         fields = ['NCE']
 
 
-
-        from django import forms
-from django.contrib.auth.hashers import make_password
-from utilisateurs.models import Utilisateur, Enseignant
-from .models import Classe, Affectation
-
-
-#  Enseignant 
-# Crée le Utilisateur + le profil Enseignant en même temps
+#  Enseignant
 
 class EnseignantForm(forms.Form):
-    # Champs Utilisateur
     prenom     = forms.CharField(max_length=100, label="Prénom")
     nom        = forms.CharField(max_length=100, label="Nom")
     email      = forms.EmailField(label="Email")
     telephone  = forms.CharField(max_length=20, required=False, label="Téléphone")
-    password   = forms.CharField(
-        widget=forms.PasswordInput,
-        required=False,
-        label="Mot de passe",
-        help_text="Laisser vide pour ne pas modifier"
-    )
-
-    # Champ Enseignant
-    grade = forms.CharField(max_length=50, required=False, label="Grade")
+    password   = forms.CharField(widget=forms.PasswordInput, required=False, label="Mot de passe")
 
     def save(self, instance=None):
         data = self.cleaned_data
-
         if instance:
-            # Modification
             u = instance.utilisateur
-            u.prenom    = data['prenom']
-            u.nom       = data['nom']
-            u.email     = data['email']
-            u.telephone = data['telephone']
+            u.prenom, u.nom, u.email, u.telephone = data['prenom'], data['nom'], data['email'], data['telephone']
             if data['password']:
                 u.set_password(data['password'])
             u.save()
-            instance.grade = data['grade']
-            instance.save()
             return instance
         else:
-            # Création
             u = Utilisateur.objects.create(
-                prenom    = data['prenom'],
-                nom       = data['nom'],
-                email     = data['email'],
-                username  = data['email'],
-                telephone = data['telephone'],
-                role      = 'ENSEIGNANT',
+                prenom=data['prenom'], nom=data['nom'], email=data['email'],
+                username=data['email'], telephone=data['telephone'], role='ENSEIGNANT'
             )
             u.set_password(data['password'] or 'changeme123')
             u.save()
-            enseignant = Enseignant.objects.create(
-                utilisateur = u,
-                grade       = data['grade']
-            )
-            return enseignant
+            return Enseignant.objects.create(utilisateur=u)
 
 
 #  Classe 
@@ -98,7 +68,12 @@ class EnseignantForm(forms.Form):
 class ClasseForm(forms.ModelForm):
     class Meta:
         model  = Classe
-        fields = ['nom', 'effectif', 'annee']
+        fields = ['nom', 'annee']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.initial.get('annee'):
+            self.initial['annee'] = date.today().year
 
 
 #  Affectation

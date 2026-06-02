@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block title %}Gérer les Enseignants{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
   .page-header {
     display: flex;
@@ -134,7 +134,6 @@
         <td style="color:var(--muted)">{{ forloop.counter }}</td>
         <td><i class="bi bi-person-circle me-2" style="color:#3b82f6"></i>{{ enseignant.prenom }} {{ enseignant.nom }}</td>
         <td>{{ enseignant.utilisateur.email }}</td>
-        <td>{{ enseignant.specialite }}</td>
         <td>{{ enseignant.modules.count }}</td>
         <td style="display:flex;gap:.4rem;">
           <a href="{% url 'administrateur:admin_enseignant_modifier' enseignant.pk %}" class="btn-edit">

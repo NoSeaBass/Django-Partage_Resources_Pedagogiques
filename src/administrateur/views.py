@@ -4,8 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
-from utilisateurs.models import Utilisateur, Enseignant, Etudiant
-from .models import Administrateur, Classe, Affectation  
+from core.models import Utilisateur, Enseignant, Etudiant, Administrateur, Classe, Affectation
 
 
 #  CONNEXION 
@@ -74,13 +73,12 @@ def enseignant_modifier(request, pk):
         'nom'      : u.nom,
         'email'    : u.email,
         'telephone': u.telephone,
-        'grade'    : enseignant.grade,
     }
     form = EnseignantForm(request.POST or None, initial=initial)
     if request.method == "POST" and form.is_valid():
         form.save(instance=enseignant)
         messages.success(request, "Enseignant modifié")
-        return redirect("admin_enseignants")
+        return redirect("administrateur:admin_enseignants")
     return render(request, "administrateur/enseignant_form.html", {"form": form})
 
 
@@ -89,7 +87,7 @@ def enseignant_supprimer(request, pk):
     enseignant = get_object_or_404(Enseignant, pk=pk)
     enseignant.delete()
     messages.success(request, "Enseignant supprimé")
-    return redirect("admin_enseignants")
+    return redirect("administrateur:admin_enseignants")
 
 
 #  CLASSES 
@@ -201,7 +199,7 @@ def affectation_ajouter(request):
     if form.is_valid():
         form.save()
         messages.success(request, "Affectation enregistrée")
-        return redirect("admin_affectations")
+        return redirect("administrateur:admin_affectations")
     return render(request, "administrateur/affectation_form.html", {"form": form})
 
 
@@ -210,7 +208,7 @@ def affectation_supprimer(request, pk):
     affectation = get_object_or_404(Affectation, pk=pk)
     affectation.delete()
     messages.success(request, "Affectation supprimée")
-    return redirect("admin_affectations")
+    return redirect("administrateur:admin_affectations")
 
 
 #  PROFIL
@@ -229,7 +227,7 @@ def profil(request):
             admin.photo = request.FILES["photo"]
             admin.save()
         messages.success(request, "Profil mis à jour")
-        return redirect("admin_profil")
+        return redirect("administrateur:admin_profil")
     return render(request, "administrateur/profil.html", {
         "admin": admin,
         "user" : request.user

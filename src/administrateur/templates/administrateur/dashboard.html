@@ -15,7 +15,7 @@
       <p>Bienvenue, {{ user.email }} — {% now "d F Y" %}</p>
     </div>
     <div class="header-actions">
-      <a href="/profil/" class="btn btn-ghost">Profil</a>
+      <a href="{% url 'administrateur:admin_profil' %}" class="btn btn-ghost">Profil</a>
       <form method="post" action="{% url 'administrateur:logout' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Déconnexion</button>

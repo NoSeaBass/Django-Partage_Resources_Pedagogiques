@@ -99,8 +99,6 @@ DATABASES = {
     }
  }
 
-'''
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -149,4 +147,4 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/administrateur/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-AUTH_USER_MODEL = 'utilisateurs.Utilisateur'
+AUTH_USER_MODEL = 'core.Utilisateur'

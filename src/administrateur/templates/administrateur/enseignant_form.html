@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block title %}{{ action }} Enseignant{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
   .form-card {
     background: rgba(255,255,255,.04);
@@ -71,57 +71,36 @@
     {% csrf_token %}
 
     <p class="section-label">Informations personnelles</p>
-
     <div class="row g-3">
       <div class="col-6">
         <label class="form-label">Nom</label>
-        <input type="text" name="nom" class="form-control"
-               placeholder="Dupont" required
-               value="{{ form.nom.value|default:'' }}"/>
+        <input type="text" name="nom" class="form-control" value="{{ form.nom.value|default:'' }}" required />
       </div>
       <div class="col-6">
         <label class="form-label">Prénom</label>
-        <input type="text" name="prenom" class="form-control"
-               placeholder="Jean" required
-               value="{{ form.prenom.value|default:'' }}"/>
+        <input type="text" name="prenom" class="form-control" value="{{ form.prenom.value|default:'' }}" required />
       </div>
     </div>
 
     <label class="form-label">Téléphone</label>
-    <input type="text" name="telephone" class="form-control"
-           placeholder="+221 77 000 00 00"
-           value="{{ form.telephone.value|default:'' }}"/>
-
-    <label class="form-label">Adresse</label>
-    <textarea name="adresse" class="form-control" rows="2"
-              placeholder="Adresse complète">{{ form.adresse.value|default:'' }}</textarea>
+    <input type="text" name="telephone" class="form-control" value="{{ form.telephone.value|default:'' }}" />
 
     <p class="section-label">Compte utilisateur</p>
-
     <label class="form-label">Email</label>
-    <input type="email" name="email" class="form-control"
-           placeholder="enseignant@monapp.com" required
-           value="{{ form.email.value|default:'' }}"/>
+    <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" required />
 
     <label class="form-label">Mot de passe</label>
-    <input type="password" name="password" class="form-control"
-           placeholder="••••••••" required/>
+    <input type="password" name="password" class="form-control" placeholder="••••••••" {% if action == 'Ajouter' %}required{% endif %} />
 
-    <p class="section-label">Informations académiques</p>
-
-    <label class="form-label">Spécialité</label>
-    <input type="text" name="specialite" class="form-control"
-           placeholder="Mathématiques, Informatique..." required
-           value="{{ form.specialite.value|default:'' }}"/>
-
-    <div style="margin-top:1.5rem;">
-      <button type="submit" class="btn-submit">
-        <i class="bi bi-check-lg me-2"></i>{{ action }}
-      </button>
-      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-ajouter">Ajouter</a>
-      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-annuler">Annuler</a>
+    <div style="margin-bottom: 1rem;">
+      <input type="checkbox" name="est_responsable" id="est_responsable" {% if form.est_responsable.value %}checked{% endif %}>
+      <label for="est_responsable" style="color: var(--muted); font-size: .9rem;">Définir comme enseignant responsable</label>
     </div>
 
+    <div style="margin-top:1.5rem;">
+      <button type="submit" class="btn-submit">Enregistrer{{ action }}</button>
+      <a href="{% url 'administrateur:admin_enseignants' %}" class="btn-annuler">Annuler</a>
+    </div>
   </form>
 </div>
 {% endblock %}

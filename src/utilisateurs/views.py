@@ -1,13 +1,17 @@
-import calendar
-from datetime import date
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import InscriptionUtilisateurForm, EtudiantForm, RessourceForm, AnnonceForm, ModuleForm
 from django.contrib.auth.decorators import login_required
-from .models import Annonce, Ressource, Historique, Etudiant, Enseignant, Notification
-from administrateur.models import Affectation, Module, Classe
-from django.db import models
 from django.utils import timezone
+from django.db import models
+
+import calendar
+from datetime import date
+
+from .forms import InscriptionUtilisateurForm, EtudiantForm, RessourceForm, AnnonceForm, ModuleForm
+from core.models import Annonce, Ressource, Historique, Etudiant, Enseignant, Notification, Affectation, Module, Classe
+
+
 
 def inscription_etudiant(request):
     if request.method == 'POST':
