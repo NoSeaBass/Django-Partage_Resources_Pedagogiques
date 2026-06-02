@@ -1,24 +1,38 @@
 !requirement.txt
-Postgresql.session.sql
-.env
-venv/
-env/
-.venv/
-.vscode
-plan.png
-__pycache__/
-migrations/
+
+# Environnements virtuels et dépendances
+**/venv/
+**/env/
+**/.venv/
+**/.env
+
+# Python cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
 db.sqlite3
 db.sqlite3-journal
-junk
+**/migrations/*.pyc
+**/migrations/__pycache__
+
+# Fichiers système et IDE
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
 *.log
 *.kate-swp
 *.bkp
-.DS_Store
-Thumbs.db
 
-mySpace/
-ressources/*
+# Médias (Tes uploads utilisateurs)
+media/
 
-# Pour l'instant ignorons les suppléments
+# Fichiers personnels ou spécifiques au projet
+Postgresql.session.sql
+junk
 install.*
+mySpace/
+**/ressources/*
