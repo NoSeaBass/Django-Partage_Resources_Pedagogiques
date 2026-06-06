@@ -79,9 +79,37 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
-    Ajouter un nouveau module
-</button>
+<div>
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
+        Ajouter un nouveau module
+    </button>
+    <t5>Liste des modules</t5>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mod in modules_classe %}
+            <tr>
+                <td>{{ mod.intitule }}</td>
+                <td>
+                    <form method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="module_id" value="{{ mod.pk }}">
+
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalModif{{ mod.pk }}">Modifier</button>
+
+                        <button name="supprimer_module" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer ?')">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <div class="modal fade" id="modalModule" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -101,4 +129,21 @@
         </form>
     </div>
 </div>
+{% for mod in modules_classe %}
+<div class="modal fade" id="modalModif{{ mod.pk }}" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" class="modal-content">
+            {% csrf_token %}
+            <input type="hidden" name="module_id" value="{{ mod.pk }}">
+            <div class="modal-header"><h5>Modifier {{ mod.intitule }}</h5></div>
+            <div class="modal-body">
+                <input type="text" name="intitule" class="form-control" value="{{ mod.intitule }}" required>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="modifier_module" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

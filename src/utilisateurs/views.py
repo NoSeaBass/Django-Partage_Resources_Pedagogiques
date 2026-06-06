@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -253,7 +252,15 @@ def gestion_classe(request, classe_id):
                 nouveau_module = form.save(commit=False)
                 nouveau_module.classe = classe
                 nouveau_module.save()
-                messages.success(request, "Module ajouté avec succès.")
+        elif 'supprimer_module' in request.POST:
+            module_id = request.POST.get('module_id')
+            Module.objects.filter(pk=module_id, classe=classe).delete()
+        elif 'modifier_module' in request.POST:
+            module_id = request.POST.get('module_id')
+            module_instance = get_object_or_404(Module, pk=module_id, classe=classe)
+            form = ModuleForm(request.POST, instance=module_instance)
+            if form.is_valid():
+                form.save()
 
     context = {
         'classe': classe,
@@ -262,6 +269,7 @@ def gestion_classe(request, classe_id):
             affectations__classe=classe,
             affectations__module__isnull=False
         ),
+        'modules_classe': Module.objects.filter(classe=classe),
         'etudiants_dans_classe': Etudiant.objects.filter(classe=classe),
         'etudiants_sans_classe': Etudiant.objects.filter(classe__isnull=True),
         'tous_enseignants': Enseignant.objects.all()
