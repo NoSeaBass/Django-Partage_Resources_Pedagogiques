@@ -64,40 +64,6 @@
     </div>
   </div>
 
-  <!-- Derniers comptes -->
-  <div class="section">
-    <h2>Derniers comptes créés</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Email</th><th>Date création</th><th>Statut</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for compte in derniers_comptes %}
-        <tr>
-          <td>{{ compte.email }}</td>
-          <td>{{ compte.date_joined|date:"d/m/Y" }}</td>
-          <td>
-            {% if compte.is_active %}
-              <span class="badge badge-active">Actif</span>
-            {% else %}
-              <span class="badge badge-inactive">Inactif</span>
-            {% endif %}
-          </td>
-          <td style="display:flex;gap:8px">
-            <a href="{% url 'admin_compte_activer' compte.pk %}" class="btn btn-outline">Activer/Désactiver</a>
-            <a href="{% url 'admin_compte_supprimer' compte.pk %}" class="btn btn-danger">Supprimer</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">Aucun compte pour l'instant.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-</div>
 {% endblock %}
 
 

@@ -1,66 +1,78 @@
 {% extends "main.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block title %}Affectations{% endblock %}
 
 {% block content %}
 
-<h2>Liste des Affectations</h2>
+<div class="container">
+            <p class="breadcrumb-nav">
+        <a href="{% url 'administrateur:admin_dashboard' %}"><i class="bi bi-house-fill"></i> Dashboard</a>
+        &rsaquo; Affectations
 
-<p>
-    <a href="{% url 'administrateur:admin_affectation_ajouter' %}">
-        Affecter une classe à un professeur
-    </a>
-</p>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>Professeur</th>
-            <th>Classe</th>
-            <th>Module</th>
-            <th>Responsable</th>
-            <th>Date début</th>
-            <th>Date fin</th>
-        </tr>
-    </thead>
+    <h2>Liste des Affectations</h2>
 
-    <tbody>
-        {% for a in affectations %}
-        <tr>
-            <td>
-                {{ a.enseignant.utilisateur.prenom }}
-                {{ a.enseignant.utilisateur.nom }}
-            </td>
+    <div class="actions-top">
+        <a class="btn-ajouter"
+           href="{% url 'administrateur:admin_affectation_ajouter' %}">
+            Affecter une classe à un professeur
+        </a>
+    </div>
 
-            <td>{{ a.classe.nom }}</td>
+    <table>
+        <thead>
+            <tr>
+                <th>Professeur</th>
+                <th>Classe</th>
+                <th>Responsable</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
 
-            <td>
-                {% if a.module %}
-                    {{ a.module.intitule }}
-                {% else %}
-                    -
-                {% endif %}
-            </td>
+        <tbody>
+            {% for a in affectations %}
+            <tr>
+                <td>
+                    {{ a.enseignant.utilisateur.prenom }}
+                    {{ a.enseignant.utilisateur.nom }}
+                </td>
 
-            <td>
-                {% if a.est_responsable %}
-                    Oui
-                {% else %}
-                    Non
-                {% endif %}
-            </td>
+                <td>
+                    {{ a.classe.nom }}
+                </td>
 
-            <td>{{ a.date_debut }}</td>
-            <td>{{ a.date_fin }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">
-                Aucune affectation enregistrée.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <td>
+                    {% if a.est_responsable %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a class="btn-supprimer"
+                       href="{% url 'administrateur:admin_affectation_supprimer' a.pk %}"
+                       onclick="return confirm('Voulez-vous vraiment supprimer cette affectation ?');">
+                        Supprimer
+                    </a>
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="4">
+                    Aucune affectation enregistrée.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
 
 {% endblock %}

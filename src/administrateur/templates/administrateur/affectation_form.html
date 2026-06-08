@@ -1,18 +1,37 @@
 {% extends "main.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>Nouvelle affectation</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="page">
+    <div class="form-card">
 
-    <button type="submit">
-        Enregistrer
-    </button>
-</form>
+        <div class="card-header">
+            <h2>Nouvelle affectation</h2>
+            <p>Associer un professeur à une classe</p>
+        </div>
 
-<a href="{% url 'administrateur:admin_affectations' %}">
-    Retour
-</a>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">
+                    Enregistrer
+                </button>
+
+                <a href="{% url 'administrateur:admin_affectations' %}"
+                   class="btn-secondary">
+                    Retour
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
 {% endblock %}

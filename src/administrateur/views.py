@@ -151,11 +151,21 @@ def compte_supprimer(request, pk):
 
 @login_required(login_url='admin_login')
 def affectations(request):
-    return render(request, "administrateur/affectation.html", {
-        "affectations": Affectation.objects.select_related(
-            'enseignant__utilisateur', 'classe'
-        ).all()
-    })
+    affectations = (
+        Affectation.objects
+        .select_related('enseignant__utilisateur', 'classe')
+        .order_by('enseignant_id', 'classe_id')
+        .distinct('enseignant_id', 'classe_id')
+    )
+
+    return render(
+        request,
+        "administrateur/affectation.html",
+        {"affectations": affectations}
+    )
+
+
+
 
 @login_required(login_url='admin_login')
 def affectation_ajouter(request):
@@ -185,14 +195,20 @@ def affectation_ajouter(request):
         return redirect("administrateur:admin_affectations")
     return render(request, "administrateur/affectation_form.html", {"form": form})
 
-
 @login_required(login_url='admin_login')
 def affectation_supprimer(request, pk):
     affectation = get_object_or_404(Affectation, pk=pk)
-    affectation.delete()
-    messages.success(request, "Affectation supprimée")
-    return redirect("administrateur:admin_affectations")
 
+    Affectation.objects.filter(
+        enseignant=affectation.enseignant
+    ).delete()
+
+    messages.success(
+        request,
+        "Toutes les affectations de cet enseignant ont été supprimées."
+    )
+
+    return redirect("administrateur:admin_affectations")
 
 @login_required(login_url='admin_login')
 def profil(request):

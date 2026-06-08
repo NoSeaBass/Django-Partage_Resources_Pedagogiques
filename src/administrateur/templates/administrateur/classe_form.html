@@ -1,7 +1,37 @@
-<h2>{{ action }} classe</h2>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Valider</button>
-</form>
+
+{% extends "main.html" %}
+{% load static %}
+
+{% block title %}{{ action }} Classe{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-form">
+
+    <div class="form-card">
+
+        <h2>{{ action }} Classe</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-content">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="btn-valider">
+                Valider
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

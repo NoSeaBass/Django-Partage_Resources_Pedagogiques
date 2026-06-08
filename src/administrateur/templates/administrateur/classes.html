@@ -1,59 +1,81 @@
 {% extends "main.html" %}
+{% load static %}
 
 {% block title %}Classes{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<h2>Liste des Classes</h2>
+<div class="container">
 
-<a href="{% url 'administrateur:admin_classe_ajouter' %}">
-    Ajouter une classe
-</a>
+    <p class="breadcrumb-nav">
+        <a href="{% url 'administrateur:admin_dashboard' %}">
+            Dashboard
+        </a>
+        &rsaquo; Classes
+    </p>
 
-<br><br>
+    <h2>Liste des Classes</h2>
 
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Niveau</th>
-            <th>Année</th>
-            <th>Étudiants</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+    <div class="actions-top">
+        <a class="btn-ajouter"
+           href="{% url 'administrateur:admin_classe_ajouter' %}">
+            Ajouter une classe
+        </a>
+    </div>
 
-    <tbody>
-        {% for classe in classes %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ classe.nom }}</td>
-            <td>{{ classe.niveau }}</td>
-            <td>{{ classe.annee }}</td>
-            <td>{{ classe.etudiants.count }}</td>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Niveau</th>
+                <th>Année</th>
+                <th>Étudiants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
 
-            <td>
-                <a href="{% url 'administrateur:admin_classe_modifier' classe.pk %}">
-                    Modifier
-                </a>
+        <tbody>
+            {% for classe in classes %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
 
-                |
+                <td>{{ classe.nom }}</td>
 
-                <a href="{% url 'administrateur:admin_classe_supprimer' classe.pk %}">
-                    Supprimer
-                </a>
-            </td>
-        </tr>
+                <td>{{ classe.niveau }}</td>
 
-        {% empty %}
-        <tr>
-            <td colspan="6">
-                Aucune classe trouvée
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <td>{{ classe.annee }}</td>
+
+                <td>{{ classe.etudiants.count }}</td>
+
+                <td>
+                    <a class="btn-modifier"
+                       href="{% url 'administrateur:admin_classe_modifier' classe.pk %}">
+                        Modifier
+                    </a>
+
+                    <a class="btn-supprimer"
+                       href="{% url 'administrateur:admin_classe_supprimer' classe.pk %}"
+                       onclick="return confirm('Voulez-vous vraiment supprimer cette classe ?');">
+                        Supprimer
+                    </a>
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="6">
+                    Aucune classe trouvée
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
 
 {% endblock %}

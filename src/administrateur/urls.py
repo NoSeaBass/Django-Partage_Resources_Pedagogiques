@@ -28,4 +28,5 @@ urlpatterns = [
     path('affectations/',views.affectations, name='admin_affectations'),
 
     path('affectations/ajouter/',views.affectation_ajouter,name='admin_affectation_ajouter'),
+   path( 'affectations/supprimer/<int:pk>/', views.affectation_supprimer, name='admin_affectation_supprimer'),
 ]
