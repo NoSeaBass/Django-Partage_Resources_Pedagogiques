@@ -1,13 +1,17 @@
-# Django-Partage_Resources_Pedagogiques
+# UniShare – Plateforme de partage de ressources pédagogiques
 
-Projet web en Python (Django) pour la gestion et le partage de ressources pédagogiques entre enseignants et étudiants.
+UniShare est une application web développée avec Django dans le cadre du projet de fin d'année de la section Informatique de la Faculté des Sciences et Techniques (UCAD) pour l'année universitaire 2025-2026.
+
+# Description du projet
+
+Cette plateforme vise à faciliter la gestion et le partage de ressources pédagogiques au sein de la section informatique. Elle permet une interaction dynamique entre les différents acteurs : enseignants, enseignants responsables et étudiants .
 
 ## Prérequis
 
 * Python 3.10+
-* PostgreSQL et son module python (`psycopg2-binary`)
-* python-dotenv
-* Pillow (pour la gestion des images)
+* PostgreSQL et `psycopg2-binary`
+* `python-dotenv`
+* `pillow`
 * Git
 
 ## Installation
@@ -17,7 +21,6 @@ Projet web en Python (Django) pour la gestion et le partage de ressources pédag
 ```bash
 git clone https://github.com/votre-user/Django-Partage_Resources_Pedagogiques.git
 cd Django-Partage_Resources_Pedagogiques/src
-
 ```
 
 2. Créez un environnement virtuel et installez les dépendances :
@@ -26,8 +29,8 @@ cd Django-Partage_Resources_Pedagogiques/src
 python -m venv venv
 source venv/bin/activate  # Sur Windows : venv\Scripts\activate
 pip install -r ../scripts/requirements.txt
-
 ```
+**NB :** Si vous aviez déja un environnement virtuel vous pouvez vous y connecter puis rentrer dans le dossier du projet et puis télécharger avec pip les modules présent dans `requirements.txt`.
 
 3. Configurez l'environnement :
 
@@ -49,21 +52,16 @@ python manage.py migrate
 
 ```bash
 python manage.py loaddata initial_data.json
-
 ```
 
 3. Créez un compte administrateur :
 
 ```bash
 python manage.py createsuperuser
-
 ```
 
 4. Lancez le serveur :
 
 ```bash
 python manage.py runserver
-
 ```
-
-Vous pouvez accéder au projet à l'adresse suivante : `http://127.0.0.1:8000/` (si vous lancez le projet en local sur votre machine).
