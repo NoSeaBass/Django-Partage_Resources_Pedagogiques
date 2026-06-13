@@ -18,6 +18,13 @@
 
                 <div class="card shadow-lg border-0 p-4">
                     <h2 class="text-center mb-4">Connexion</h2>
+
+                    {% if msg %}
+                        <div class="alert alert-info text-center" role="alert">
+                            {{ msg }}
+                        </div>
+                    {% endif %}
+
                     <form method="post" novalidate>
                         {% csrf_token %}
                         {% for field in form %}
@@ -28,17 +35,6 @@
                         {% endfor %}
                         <button type="submit" class="btn btn-primary w-100 mt-2">Se connecter</button>
                     </form>
-
-                    {% if messages %}
-                        {% for message in messages %}
-                            {# On n'affiche le message que s'il est une erreur sur cette page précise #}
-                            {% if message.tags == 'alert-danger' %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
 
                     <div class="text-center mt-3">
                         <p class="mb-0">Pas encore inscrit ? <a href="{% url 'utilisateurs:inscription_etudiant' %}">Inscrivez-vous</a></p>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
+#from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db import models
@@ -13,6 +13,7 @@ from core.models import Annonce, Ressource, Historique, Etudiant, Enseignant, No
 
 
 def inscription_etudiant(request):
+    msg = ""
     if request.method == 'POST':
         user_form = InscriptionUtilisateurForm(request.POST)
         etudiant_form = EtudiantForm(request.POST)
@@ -26,10 +27,12 @@ def inscription_etudiant(request):
             etudiant.utilisateur = user
             etudiant.save()
 
-            messages.success(request, "Inscription réussie !")
+            #messages.success(request, "Inscription réussie !")
+            msg = "Inscription réussite"
             return redirect('authentification:connexion')
         else:
-            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+            #messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+            msg = "Veillez corrigez les erreurs ci-dessous"
     else:
         user_form = InscriptionUtilisateurForm()
         etudiant_form = EtudiantForm()
@@ -37,6 +40,7 @@ def inscription_etudiant(request):
     context = {
         'user_form': user_form,
         'etudiant_form': etudiant_form,
+        'msg' : msg,
     }
     return render(request, 'utilisateurs/etudiant/inscription.html', context)
 
@@ -45,6 +49,7 @@ def mon_profil(request):
     return render(request, 'utilisateurs/moncompte.html')
 
 def traitement_global(request):
+    msg = ""
     if request.method == 'POST':
         enseignant = request.user.profil_enseignant
 
@@ -62,7 +67,6 @@ def traitement_global(request):
                         message=ressource.module.intitule,
                         etudiant=etu
                     )
-                messages.success(request, "Ressource enregistrée.")
 
         elif 'btn_annonce' in request.POST:
             form = AnnonceForm(request.POST, enseignant=enseignant)
@@ -78,7 +82,6 @@ def traitement_global(request):
                         message=f"Une nouvelle annonce importante est disponible.",
                         etudiant=etu
                     )
-                messages.success(request, "Annonce publiée.")
 
     return redirect(request.META.get('HTTP_REFERER', 'utilisateurs:home'))
 

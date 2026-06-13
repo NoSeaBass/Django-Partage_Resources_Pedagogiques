@@ -8,20 +8,24 @@ from core.models import Utilisateur, Enseignant, Etudiant, Administrateur, Class
 
 
 def admin_login(request):
+    msg = ""
     form = AuthenticationForm(request, data=request.POST or None)
+
     if request.method == "POST":
         if form.is_valid():
             user = form.get_user()
             if Administrateur.objects.filter(utilisateur=user).exists():
                 login(request, user)
-                #return render(request, "administrateur/dashboard.html")
-                #return redirect("admin_dashboard")
                 return redirect("administrateur:admin_dashboard")
             else:
-                messages.error(request, "Accès réservé aux administrateurs.")
+                msg = "Accès réservé aux administrateurs."
         else:
-            messages.error(request, "Identifiants invalides.")
-    return render(request, "administrateur/login.html", {"form": form})
+            msg = "Identifiants invalides."
+
+    return render(request, "administrateur/login.html", {
+        "form": form,
+        "msg": msg
+    })
 
 def admin_logout(request):
     logout(request)

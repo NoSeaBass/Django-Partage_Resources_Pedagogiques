@@ -19,6 +19,12 @@
                 <div class="card shadow-lg border-0 p-4">
                     <h2 class="text-center mb-4">Inscription Étudiant</h2>
 
+                    {% if msg %}
+                        <div class="alert alert-info text-center" role="alert">
+                            {{ msg }}
+                        </div>
+                    {% endif %}
+
                     <form method="post" novalidate>
                         {% csrf_token %}
 
