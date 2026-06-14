@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/146.0.7680.216 Electron/41.6.1 Safari/537.36" version="29.0.3" pages="4">
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/146.0.7680.216 Electron/41.6.1 Safari/537.36" version="29.0.3" pages="5">
   <diagram name="authentification/inscription" id="KFUuDVC21vQKwHRmfyR0">
     <mxGraphModel dx="960" dy="457" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="1">
       <root>
@@ -309,7 +309,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="A0N6NslDBujXtiSsoydF" name="Classes">
-    <mxGraphModel dx="2338" dy="708" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1570" dy="664" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -667,6 +667,59 @@
         </mxCell>
         <mxCell id="dByQwp3kSjskV0osPehC-24" value="0...*" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="250" y="619" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="F2FYj9ZH7YsdKEu4zKYG" name="Page-5">
+    <mxGraphModel dx="720" dy="664" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4hmGitSq605A4x8oulqp-1" value="etudiant" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="30" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-2" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="270" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-3" value="responsable" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="690" y="70" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-4" value="s&#39;inscrire" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="120" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-5" value="consulter annance" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="390" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-6" value="recherche ressources" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="260" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-7" value="telecharger ressources" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="353" y="310" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-8" value="rejoindre une classe" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="190" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-9" value="s&#39;authentifier" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="40" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-11" value="consulter ressources" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="140" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-12" value="gerer etudiants" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="240" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-13" value="gerer enseigement" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="310" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-14" value="gerer classes" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="390" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-15" value="gerer responsable" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="400" width="145" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4hmGitSq605A4x8oulqp-16" value="consulter notifications" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="220" width="145" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

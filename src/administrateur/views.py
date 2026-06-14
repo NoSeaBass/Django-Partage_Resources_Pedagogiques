@@ -31,7 +31,6 @@ def admin_logout(request):
     logout(request)
     return redirect("administrateur:admin_login")
 
-#@login_required(login_url='admin_login')
 login_url='administrateur:admin_login'
 def dashboard(request):
     return render(request, "administrateur/dashboard.html", {

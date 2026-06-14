@@ -250,9 +250,16 @@ def gestion_classe(request, classe_id):
         if 'ajouter_module_classe' in request.POST:
             form = ModuleForm(request.POST)
             if form.is_valid():
-                nouveau_module = form.save(commit=False)
-                nouveau_module.classe = classe
-                nouveau_module.save()
+                intitule_saisi = form.cleaned_data.get('intitule')
+                if Module.objects.filter(classe=classe, intitule=intitule_saisi).exists():
+                    msg = "Ce module existe déjà dans cette classe."
+                else:
+                    nouveau_module = form.save(commit=False)
+                    nouveau_module.classe = classe
+                    nouveau_module.save()
+                    msg = "Module ajouté avec succès."
+            else:
+                msg = "Veuillez corriger les erreurs dans le formulaire."
         elif 'supprimer_module' in request.POST:
             module_id = request.POST.get('module_id')
             Module.objects.filter(pk=module_id, classe=classe).delete()
@@ -273,6 +280,7 @@ def gestion_classe(request, classe_id):
         'modules_classe': Module.objects.filter(classe=classe),
         'etudiants_dans_classe': Etudiant.objects.filter(classe=classe),
         'etudiants_sans_classe': Etudiant.objects.filter(classe__isnull=True),
-        'tous_enseignants': Enseignant.objects.all()
+        'tous_enseignants': Enseignant.objects.all(),
+        'msg' : msg
     }
     return render(request, 'utilisateurs/professeur/classe.html', context)

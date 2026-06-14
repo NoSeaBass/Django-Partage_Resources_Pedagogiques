@@ -40,6 +40,7 @@
 
         <div class="col-md-6">
             <h5>Professeurs du module</h5>
+
             <table class="table table-sm">
                 <thead><tr><th>Nom</th><th>Modules gérés</th><th>Action</th></tr></thead>
                 <tbody>
@@ -77,38 +78,46 @@
             </table>
         </div>
     </div>
-</div>
 
-<div>
-    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
-        Ajouter un nouveau module
-    </button>
-    <t5>Liste des modules</t5>
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Module</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mod in modules_classe %}
-            <tr>
-                <td>{{ mod.intitule }}</td>
-                <td>
-                    <form method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="module_id" value="{{ mod.pk }}">
+    <br/><hr/><br/>
 
-                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalModif{{ mod.pk }}">Modifier</button>
+    <div class="row">
+        <h5>Liste des modules</h5>
+        {% if msg %}
+            <div class="alert alert-info text-center" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
+            Ajouter un nouveau module
+        </button>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mod in modules_classe %}
+                <tr>
+                    <td>{{ mod.intitule }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="module_id" value="{{ mod.pk }}">
 
-                        <button name="supprimer_module" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalModif{{ mod.pk }}">Modifier</button>
+
+                            <button name="supprimer_module" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <div class="modal fade" id="modalModule" tabindex="-1" aria-hidden="true">
