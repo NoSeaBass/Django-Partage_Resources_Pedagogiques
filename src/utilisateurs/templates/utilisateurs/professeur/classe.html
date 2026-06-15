@@ -3,7 +3,11 @@
 {% block app_content %}
 <div class="p-4 bg-white rounded shadow-sm">
     <h3 class="mb-4">Gestion de la classe : {{ classe.nom }}</h3>
-
+    {% if msg %}
+        <div class="alert alert-info text-center" role="alert">
+            {{ msg }}
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-6 border-end">
             <h5>Étudiants</h5>
@@ -83,11 +87,6 @@
 
     <div class="row">
         <h5>Liste des modules</h5>
-        {% if msg %}
-            <div class="alert alert-info text-center" role="alert">
-                {{ msg }}
-            </div>
-        {% endif %}
         <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalModule">
             Ajouter un nouveau module
         </button>

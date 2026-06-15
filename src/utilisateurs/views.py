@@ -153,25 +153,70 @@ def modules(request):
             'modules_responsable': modules_responsable
         })
 
+
 @login_required
 def list_ressources(request, module_id):
     module = get_object_or_404(Module, id=module_id)
+    etudiants = module.classe.etudiant_set.all()
+    msg = ""
+
+    is_enseignant_module = False
+    if hasattr(request.user, 'profil_enseignant'):
+        is_enseignant_module = Affectation.objects.filter(
+            enseignant=request.user.profil_enseignant,
+            module=module
+        ).exists()
+
+    if request.method == 'POST' and is_enseignant_module:
+        if 'supprimer_ressource' in request.POST:
+            ressource_id = request.POST.get('ressource_id')
+            ressource = Ressource.objects.filter(id=ressource_id, enseignant=request.user.profil_enseignant).first()
+            if ressource:
+                titre_res = ressource.titre
+                ressource.delete()
+                for etu in etudiants:
+                    Notification.objects.create(
+                        titre="Ressource supprimée",
+                        message=f"La ressource '{titre_res}' a été supprimée.",
+                        etudiant=etu
+                    )
+                msg = "Ressource supprimée."
+
+        elif 'modifier_ressource' in request.POST:
+            ressource_id = request.POST.get('ressource_id')
+            instance = get_object_or_404(Ressource, id=ressource_id, enseignant=request.user.profil_enseignant)
+            form = RessourceForm(request.POST, request.FILES, instance=instance, enseignant=request.user.profil_enseignant)
+            if form.is_valid():
+                form.save()
+                for etu in etudiants:
+                    Notification.objects.create(
+                        titre="Ressource modifiée",
+                        message=f"La ressource '{instance.titre}' a été mise à jour.",
+                        etudiant=etu
+                    )
+                msg = "Ressource mise à jour."
+            else:
+                msg = "Erreur lors de la modification."
+
+
     ressources = Ressource.objects.filter(module=module).order_by('-date_ajout')
+    ressources_data = []
 
-    if hasattr(request.user, 'profil_etudiant'):
-        etudiant = request.user.profil_etudiant
+    for r in ressources:
+        form = None
+        if is_enseignant_module:
+            form = RessourceForm(instance=r, enseignant=request.user.profil_enseignant)
 
-        Historique.objects.create(etudiant=etudiant, action='consultation')
-
-        etudiant.notifications.filter(
-            lue=False,
-            titre="Nouvelle ressource",
-            message__contains=module.intitule
-        ).update(lue=True)
+        ressources_data.append({
+            'obj': r,
+            'form': form
+        })
 
     context = {
         'module': module,
-        'ressources': ressources,
+        'ressources_data': ressources_data,
+        'is_enseignant_module': is_enseignant_module,
+        'msg': msg,
     }
     return render(request, 'utilisateurs/ressources.html', context)
 
@@ -212,42 +257,57 @@ def historique_etudiants(request):
 
 @login_required
 def gestion_classe(request, classe_id):
+    msg = ""
     classe = get_object_or_404(Classe, pk=classe_id)
+
+    # Vérification des droits d'accès
     if not Affectation.objects.filter(enseignant=request.user.profil_enseignant, classe=classe, est_responsable=True).exists():
         return redirect('utilisateurs:home')
 
     if request.method == 'POST':
-
+        # Gestion des modules
         if 'ajouter_module' in request.POST:
             ens_id = request.POST.get('enseignant_id')
             mod_id = request.POST.get('module_id')
-            ens = Enseignant.objects.get(pk=ens_id)
-            mod = Module.objects.get(pk=mod_id)
+            ens = Enseignant.objects.filter(pk=ens_id).first()
+            mod = Module.objects.filter(pk=mod_id).first()
 
-            aff_admin = Affectation.objects.filter(enseignant=ens, classe=classe, module__isnull=True).first()
-
-            if aff_admin:
-                aff_admin.module = mod
-                aff_admin.save()
+            if ens and mod:
+                aff_admin = Affectation.objects.filter(enseignant=ens, classe=classe, module__isnull=True).first()
+                if aff_admin:
+                    aff_admin.module = mod
+                    aff_admin.save()
+                    msg = "Module attribué à l'enseignant."
+                else:
+                    Affectation.objects.create(enseignant=ens, classe=classe, module=mod, date_debut=timezone.now())
+                    msg = "Nouveau module affecté avec succès."
             else:
-                Affectation.objects.create(enseignant=ens, classe=classe, module=mod, date_debut=timezone.now())
+                msg = "Erreur : Enseignant ou Module invalide."
 
         elif 'retirer_module' in request.POST:
-            Affectation.objects.filter(pk=request.POST.get('aff_id')).delete()
+            aff_id = request.POST.get('aff_id')
+            Affectation.objects.filter(pk=aff_id, classe=classe).delete()
+            msg = "Affectation retirée."
 
-        if 'ajouter' in request.POST:
-            etudiant_id = request.POST.get('etudiant_id')
-            etudiant = Etudiant.objects.get(pk=etudiant_id)
-            etudiant.classe = classe
-            etudiant.save()
+        # Gestion des étudiants
+        elif 'ajouter' in request.POST:
+            etudiant = Etudiant.objects.filter(pk=request.POST.get('etudiant_id')).first()
+            if etudiant:
+                etudiant.classe = classe
+                etudiant.save()
+                msg = "Étudiant ajouté à la classe."
+            else:
+                msg = "Erreur : Étudiant introuvable."
 
         elif 'retirer' in request.POST:
-            etudiant_id = request.POST.get('etudiant_id')
-            etudiant = Etudiant.objects.get(pk=etudiant_id)
-            etudiant.classe = None
-            etudiant.save()
+            etudiant = Etudiant.objects.filter(pk=request.POST.get('etudiant_id')).first()
+            if etudiant:
+                etudiant.classe = None
+                etudiant.save()
+                msg = "Étudiant retiré de la classe."
 
-        if 'ajouter_module_classe' in request.POST:
+        # Gestion du catalogue de modules de la classe
+        elif 'ajouter_module_classe' in request.POST:
             form = ModuleForm(request.POST)
             if form.is_valid():
                 intitule_saisi = form.cleaned_data.get('intitule')
@@ -257,18 +317,24 @@ def gestion_classe(request, classe_id):
                     nouveau_module = form.save(commit=False)
                     nouveau_module.classe = classe
                     nouveau_module.save()
-                    msg = "Module ajouté avec succès."
+                    msg = "Module ajouté au catalogue de la classe."
             else:
-                msg = "Veuillez corriger les erreurs dans le formulaire."
+                msg = "Erreur dans le formulaire de module."
+
         elif 'supprimer_module' in request.POST:
-            module_id = request.POST.get('module_id')
-            Module.objects.filter(pk=module_id, classe=classe).delete()
+            mod_id = request.POST.get('module_id')
+            Module.objects.filter(pk=mod_id, classe=classe).delete()
+            msg = "Module supprimé de la classe."
+
         elif 'modifier_module' in request.POST:
-            module_id = request.POST.get('module_id')
-            module_instance = get_object_or_404(Module, pk=module_id, classe=classe)
-            form = ModuleForm(request.POST, instance=module_instance)
+            mod_id = request.POST.get('module_id')
+            mod_inst = get_object_or_404(Module, pk=mod_id, classe=classe)
+            form = ModuleForm(request.POST, instance=mod_inst)
             if form.is_valid():
                 form.save()
+                msg = "Module modifié avec succès."
+            else:
+                msg = "Erreur lors de la modification du module."
 
     context = {
         'classe': classe,
@@ -281,6 +347,6 @@ def gestion_classe(request, classe_id):
         'etudiants_dans_classe': Etudiant.objects.filter(classe=classe),
         'etudiants_sans_classe': Etudiant.objects.filter(classe__isnull=True),
         'tous_enseignants': Enseignant.objects.all(),
-        'msg' : msg
+        'msg': msg
     }
     return render(request, 'utilisateurs/professeur/classe.html', context)

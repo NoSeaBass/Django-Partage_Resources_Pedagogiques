@@ -4,22 +4,47 @@
     <div class="p-4 bg-white rounded shadow-sm">
         <h3 class="mb-4">Ressources pour : {{ module.intitule }}</h3>
 
-        {% if ressources %}
+        {% if ressources_data %}
             <ul class="list-group">
-                {% for ressource in ressources %}
+                {% for item in ressources_data %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>{{ ressource.titre }}</strong><br>
-                            <small class="text-muted">{{ ressource.description|default:"Aucune description" }}</small>
+                            <strong>{{ item.obj.titre }}</strong>
+                            <br>
+                            <a href="{% url 'utilisateurs:telecharger_ressource' item.obj.id %}" class="btn btn-sm btn-info mt-1">Télécharger</a>
                         </div>
-                        <a href="{% url 'utilisateurs:telecharger_ressource' ressource.id %}" class="btn btn-sm btn-primary">Télécharger</a>
+
+                        <div class="d-flex gap-2">
+                            {% if is_enseignant_module %}
+                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ item.obj.id }}">Modifier</button>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ressource_id" value="{{ item.obj.id }}">
+                                    <button type="submit" name="supprimer_ressource" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </li>
+
+                    {% if item.form %}
+                        <div class="modal fade" id="modalEdit{{ item.obj.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ressource_id" value="{{ item.obj.id }}">
+                                    <div class="modal-content">
+                                        <div class="modal-body">{{ item.form.as_p }}</div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="modifier_ressource" class="btn btn-primary">Enregistrer</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </ul>
-        {% else %}
-            <p class="text-muted">Aucune ressource disponible pour ce module pour le moment.</p>
         {% endif %}
 
-        <a href="{% url 'utilisateurs:modules' %}" class="btn btn-link mt-3">Retour à la liste des modules</a>
     </div>
 {% endblock %}
