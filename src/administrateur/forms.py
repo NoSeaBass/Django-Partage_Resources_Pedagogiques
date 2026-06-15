@@ -84,11 +84,19 @@ class ClasseForm(forms.ModelForm):
 
 class AffectationForm(forms.ModelForm):
     class Meta:
-        model   = Affectation
-        fields  = ['enseignant', 'classe', 'est_responsable']
-        widgets = {
-            'date_debut': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'date_fin'  : forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-        }
+        model = Affectation
+        fields = ['enseignant', 'classe', 'est_responsable']
+
+    def save(self, commit=True):
+        affectation = super().save(commit=False)
+
+        if affectation.est_responsable:
+            utilisateur = affectation.enseignant.utilisateur
+            utilisateur.role = 'RESPONSABLE'
+            utilisateur.save()
+
+        if commit:
+            affectation.save()
+        return affectation
 
         

@@ -1,0 +1,140 @@
+[
+  {
+    "model": "core.classe",
+    "pk": 1,
+    "fields": { "nom": "L3 INFO", "effectif": 12, "annee": 2026 }
+  },
+  {
+    "model": "core.utilisateur",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=",
+      "is_superuser": true, "is_staff": true, "is_active": true,
+      "email": "admin@gmail.com", "nom": "Blank", "prenom": "Admin", "role": "ADMIN"
+    }
+  },
+  {
+    "model": "core.administrateur",
+    "pk": 1,
+    "fields": { "telephone": "770000000" }
+  },
+  {
+    "model": "core.utilisateur",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=",
+      "is_active": true, "email": "bame@ecole.sn", "nom": "Bame", "prenom": "Prof", "role": "ENSEIGNANT"
+    }
+  },
+  { "model": "core.enseignant", "pk": 2, "fields": {} },
+  {
+    "model": "core.utilisateur",
+    "pk": 3,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "jndong@ecole.sn", "nom": "Ndong", "prenom": "Joseph", "role": "ENSEIGNANT" }
+  },
+  { "model": "core.enseignant", "pk": 3, "fields": {} },
+  {
+    "model": "core.utilisateur",
+    "pk": 4,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "mgueye@ecole.sn", "nom": "Gueye", "prenom": "Modou", "role": "ENSEIGNANT" }
+  },
+  { "model": "core.enseignant", "pk": 4, "fields": {} },
+  {
+    "model": "core.utilisateur",
+    "pk": 5,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "toure@ecole.sn", "nom": "Toure", "prenom": "Prof", "role": "ENSEIGNANT" }
+  },
+  { "model": "core.enseignant", "pk": 5, "fields": {} },
+  {
+    "model": "core.utilisateur",
+    "pk": 6,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "pdiop@ecole.sn", "nom": "Diop", "prenom": "Papa Ibrahima", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 6, "fields": { "NCE": "2026001", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 7,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "adiop@ecole.sn", "nom": "Diop", "prenom": "Amadou", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 7, "fields": { "NCE": "2026002", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 8,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "maidara@ecole.sn", "nom": "Aidara", "prenom": "Mouhammed Limame", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 8, "fields": { "NCE": "2026003", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 9,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "mngome@ecole.sn", "nom": "Ngome", "prenom": "Mame Diarra", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 9, "fields": { "NCE": "2026004", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 10,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "bboye@ecole.sn", "nom": "Boye", "prenom": "Babacar", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 10, "fields": { "NCE": "2026005", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 11,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "mambaye@ecole.sn", "nom": "Mbaye", "prenom": "Mame Aly", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 11, "fields": { "NCE": "2026006", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 12,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "ngonei@ecole.sn", "nom": "Ngonei", "prenom": "Etudiant", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 12, "fields": { "NCE": "2026007", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 13,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "andiaye@ecole.sn", "nom": "Ndiaye", "prenom": "Adji Mbaw", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 13, "fields": { "NCE": "2026008", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 14,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "ngueye@ecole.sn", "nom": "Gueye", "prenom": "Ndeye", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 14, "fields": { "NCE": "2026009", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 15,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "nsba@ecole.sn", "nom": "Ba", "prenom": "Ndeye Seny", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 15, "fields": { "NCE": "2026010", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 16,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "ndiba@ecole.sn", "nom": "Diba", "prenom": "Ndeye", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 16, "fields": { "NCE": "2026011", "classe": 1 } },
+  {
+    "model": "core.utilisateur",
+    "pk": 17,
+    "fields": { "password": "pbkdf2_sha256$1200000$uXiVC3YVGvKbEMyWskhjxj$K0/I+DVyZvyytW2X/chwIKLyTtVv/DPPFwuufv6McyM=", "email": "sdieye@ecole.sn", "nom": "Dieye", "prenom": "Serigne Fallou", "role": "ETUDIANT" }
+  },
+  { "model": "core.etudiant", "pk": 17, "fields": { "NCE": "2026012", "classe": 1 } },
+  {
+    "model": "core.module",
+    "pk": 1,
+    "fields": { "intitule": "Django", "classe": 1 }
+  },
+  {
+    "model": "core.module",
+    "pk": 2,
+    "fields": { "intitule": "Java / JEE", "classe": 1 }
+  },
+  {
+    "model": "core.module",
+    "pk": 3,
+    "fields": { "intitule": "Administration BDD", "classe": 1 }
+  },
+  {
+    "model": "core.module",
+    "pk": 4,
+    "fields": { "intitule": "Frontend", "classe": 1 }
+  }
+]
